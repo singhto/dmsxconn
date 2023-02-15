@@ -30,6 +30,7 @@ class Dmsxmodel {
   final String timestamp;
   final String userId;
   final String importDate;
+  final String image_befor_wmmr;
   Dmsxmodel({
     this.id,
     this.ca,
@@ -58,6 +59,7 @@ class Dmsxmodel {
     this.timestamp,
     this.userId,
     this.importDate,
+    this.image_befor_wmmr,
   });
 
 
@@ -90,6 +92,7 @@ class Dmsxmodel {
       'timestamp': timestamp,
       'userId': userId,
       'importDate': importDate,
+      'image_befor_wmmr': image_befor_wmmr,
     };
   }
 
@@ -122,6 +125,7 @@ class Dmsxmodel {
       timestamp: map['timestamp'] ?? '',
       userId: map['user_id'] ?? '',
       importDate: map['import_date'] ?? '',
+      image_befor_wmmr: map['image_befor_wmmr'] ?? '',
     );
   }
 

@@ -17,6 +17,8 @@ import 'package:psinsx/pages/map_dmsx.dart';
 import 'package:psinsx/pages/search_page.dart';
 import 'package:psinsx/pages/signin_page.dart';
 import 'package:psinsx/pages/take_photo_id.dart';
+import 'package:psinsx/utility/app_controller.dart';
+import 'package:psinsx/utility/app_service.dart';
 import 'package:psinsx/utility/my_constant.dart';
 import 'package:psinsx/utility/normal_dialog.dart';
 import 'package:psinsx/utility/sqlite_helper.dart';
@@ -44,7 +46,7 @@ class _HomePageState extends State<HomePage> {
   List<InsxModel2> insxModel2s = [];
 
   List pages = [
-   // MyMap2(),
+    // MyMap2(),
     Mapdmsx(),
     SearchPage(),
     Dashbord(),
@@ -60,11 +62,22 @@ class _HomePageState extends State<HomePage> {
     'หน้าหลัก',
   ];
 
+  AppController appController = Get.put(AppController());
+
   @override
   void initState() {
     super.initState();
     cratePages();
     readUserInfo();
+
+    Future.delayed(
+      Duration.zero,
+      () {
+        AppService().processFindLocation(context: context).then((value) {
+          print('###5feb position --> ${appController.positions.length}');
+        });
+      },
+    );
   }
 
   void cratePages() {

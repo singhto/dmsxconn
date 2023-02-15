@@ -14,6 +14,7 @@ class MyDialog {
     @required String subTitle,
     Widget firstButton,
     Widget secondButton,
+    Widget contentWidget,
   }) {
     showDialog(
       context: context,
@@ -22,6 +23,7 @@ class MyDialog {
           title: ShowText(text: title),
           subtitle: ShowText(text: subTitle),
         ),
+        content: contentWidget ?? const SizedBox(),
         actions: [
           firstButton ?? const SizedBox(),
           secondButton ??
@@ -32,16 +34,20 @@ class MyDialog {
                   })
         ],
       ),
+      barrierDismissible: false,
     );
   }
 
   Future<void> processDialog() async {
     showDialog(
-        context: context,
-        builder: (BuildContext context) => WillPopScope(
-            child: ShowProgress(),
-            onWillPop: () async {
-              return false;
-            }));
+      context: context,
+      builder: (BuildContext context) => WillPopScope(
+        child: ShowProgress(),
+        onWillPop: () async {
+          return false;
+        },
+      ),
+      barrierDismissible: false,
+    );
   }
 }
