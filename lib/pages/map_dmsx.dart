@@ -3,10 +3,13 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:dio/dio.dart';
+import 'package:dio/dio.dart' as dio;
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -14,6 +17,7 @@ import 'package:psinsx/models/dmsx_befor_image_model.dart';
 import 'package:psinsx/models/dmsx_model.dart';
 import 'package:psinsx/pages/detail_money.dart';
 import 'package:psinsx/pages/dmsx_list_page.dart';
+import 'package:psinsx/utility/app_controller.dart';
 import 'package:psinsx/utility/app_service.dart';
 import 'package:psinsx/utility/my_calculate.dart';
 import 'package:psinsx/utility/my_constant.dart';
@@ -79,6 +83,7 @@ class _MapdmsxState extends State<Mapdmsx> {
   void initState() {
     super.initState();
     readDataApi();
+    AppService().processFindLocation(context: context);
   }
 
   void procressAddMarker(Dmsxmodel dmsxmodel, int index) {
@@ -135,7 +140,7 @@ class _MapdmsxState extends State<Mapdmsx> {
         checkDisplayIconTakePhoto(dmsxmodel: dmsxModels[indexDirection]);
 
         print(
-            '###5feb dmsxModel status --> ${dmsxModels[indexDirection].status}');
+            '##6mar dmsxModel status --> ${dmsxModels[indexDirection].status}');
         print(
             '###5feb dmsxModel statusText --> ${dmsxModels[indexDirection].statusTxt}');
 
@@ -153,7 +158,7 @@ class _MapdmsxState extends State<Mapdmsx> {
       infoWindow: InfoWindow(
         onTap: () {
           print(
-            'click lat = $latDirection , $lngDirection',
+            ' click lat = $latDirection , $lngDirection',
           );
         },
         title: '${dmsxmodel.employeeId}',
@@ -199,7 +204,7 @@ class _MapdmsxState extends State<Mapdmsx> {
 
         print('###1feb path ==>>> $path');
 
-        await Dio().get(path).then(
+        await dio.Dio().get(path).then(
           (value) {
             setState(() {
               load = false;
@@ -323,19 +328,26 @@ class _MapdmsxState extends State<Mapdmsx> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: load
-          ? ShowProgress()
-          : haveData
-              ? showDataMap()
-              : showNodata(),
-      bottomNavigationBar: BottomAppBar(
-        color: Colors.white,
-      ),
-    );
+    return GetX(
+        init: AppController(),
+        builder: (AppController appController) {
+          print('position ->> ${appController.positions.length}');
+          return Scaffold(
+            body: ((load) &&
+                    (appController.positions.isNotEmpty) &&
+                    (haveData != null))
+                ? ShowProgress()
+                : haveData ?? false
+                    ? showDataMap(appController: appController)
+                    : const SizedBox(),
+            bottomNavigationBar: BottomAppBar(
+              color: Colors.white,
+            ),
+          );
+        });
   }
 
-  Stack showDataMap() {
+  Stack showDataMap({@required AppController appController}) {
     return Stack(
       children: [
         buildMap(),
@@ -344,7 +356,7 @@ class _MapdmsxState extends State<Mapdmsx> {
         buildControlGreen(),
         buildControlPubple(),
         buildSearchButton(),
-        showDirction ? buildDirction() : SizedBox(),
+        showDirction ? buildDirction(appController: appController) : SizedBox(),
       ],
     );
   }
@@ -567,7 +579,7 @@ class _MapdmsxState extends State<Mapdmsx> {
     }
   }
 
-  Column buildDirction() {
+  Column buildDirction({@required AppController appController}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.end,
@@ -583,8 +595,20 @@ class _MapdmsxState extends State<Mapdmsx> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     ShowText(text: 'สาย: ${dmsxModels[indexDirection].line}'),
-                    SizedBox(width: 10),
-                    ShowText(text: 'ca: ${dmsxModels[indexDirection].ca}'),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ShowText(text: 'ca: ${dmsxModels[indexDirection].ca}'),
+                        WidgetIconButton(
+                          iconData: Icons.copy,
+                          pressFunc: () {
+                            Clipboard.setData(ClipboardData(
+                                text: dmsxModels[indexDirection].ca));
+                            print('copy success');
+                          },
+                        )
+                      ],
+                    ),
                   ],
                 ),
                 SizedBox(width: 20),
@@ -647,9 +671,36 @@ class _MapdmsxState extends State<Mapdmsx> {
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        processTakePhoto(
-                            dmsxmodel: dmsxModels[indexDirection],
-                            source: ImageSource.gallery);
+                        double latDou =
+                            double.parse(dmsxModels[indexDirection].lat);
+                        double lngDou =
+                            double.parse(dmsxModels[indexDirection].lng);
+
+                        if (appController.positions.isNotEmpty) {
+                          Position position = appController.positions.last;
+
+                          print(
+                              '##6mar You Click Her latDou = $latDou lngDou = $lngDou');
+
+                          print('##6mar posion= $position');
+
+                          double distance = AppService().calculateDistance(
+                              position.latitude,
+                              position.longitude,
+                              latDou,
+                              lngDou);
+
+                          print('##6mar distance= $distance');
+
+                          NumberFormat numberFormat = NumberFormat('##0.0#', 'en_US');
+
+                          String distanceStr = numberFormat.format(distance);
+
+                          processTakePhoto(
+                              dmsxmodel: dmsxModels[indexDirection],
+                              source: ImageSource.gallery,
+                              distance: distanceStr, position: position);
+                        }
                       },
                       child: ShowText(text: 'เลือกรูป'),
                     ),
@@ -680,12 +731,12 @@ class _MapdmsxState extends State<Mapdmsx> {
                                             '${dmsxModels[indexDirection].ca}_${dmsxModels[indexDirection].dataStatus}.jpg';
                                         Map<String, dynamic> map = {};
                                         map['file'] =
-                                            await MultipartFile.fromFile(
+                                            await dio.MultipartFile.fromFile(
                                                 file.path,
                                                 filename: nameFile);
-                                        FormData formData =
-                                            FormData.fromMap(map);
-                                        await Dio()
+                                        dio.FormData formData =
+                                            dio.FormData.fromMap(map);
+                                        await dio.Dio()
                                             .post(urlUpload, data: formData)
                                             .then((value) async {
                                           String urlImage =
@@ -694,7 +745,7 @@ class _MapdmsxState extends State<Mapdmsx> {
 
                                           String urlInsert =
                                               'https://pea23.com/apipsinsx/insertDataBeforDmsx.php?isAdd=true&ca=${dmsxModels[indexDirection].ca}&image=$urlImage&userId=${dmsxModels[indexDirection].userId}';
-                                          await Dio()
+                                          await dio.Dio()
                                               .get(urlInsert)
                                               .then((value) {
                                             Navigator.pop(context);
@@ -726,7 +777,8 @@ class _MapdmsxState extends State<Mapdmsx> {
     if (dmsxModels[indexDirection].statusTxt == 'ถอดมิเตอร์แล้ว') {
       MyDialog(context: context).normalDialot(
           title: 'สถานะ : ถอดมิเตอร์แล้ว',
-          subTitle: 'หลังจาก ถอดมิเตอร์แล้ว ให้ถ่ายภาพแป้นที่ติดตั้งมิเตอร์เพื่อเป็นหลักฐานการ เขียนเลข PEA และเลขอ่านหน่วยให้ชัดเจน',
+          subTitle:
+              'หลังจาก ถอดมิเตอร์แล้ว ให้ถ่ายภาพแป้นที่ติดตั้งมิเตอร์เพื่อเป็นหลักฐานการ เขียนเลข PEA และเลขอ่านหน่วยให้ชัดเจน',
           firstButton: WidgetTextButton(
             label: 'ถ่ายภาพ',
             pressFunc: () async {
@@ -737,7 +789,8 @@ class _MapdmsxState extends State<Mapdmsx> {
                 Navigator.pop(context);
                 MyDialog(context: context).normalDialot(
                     title: 'รูปภาพหลัง ถอดมิเตอร์',
-                    subTitle: 'มั่นใจว่าได้ภาพที่ชัดเจนแล้วนะ กดอัพโหลดได้เลยครับ',
+                    subTitle:
+                        'มั่นใจว่าได้ภาพที่ชัดเจนแล้วนะ กดอัพโหลดได้เลยครับ',
                     contentWidget: SizedBox(
                       width: 300,
                       height: 200,
@@ -768,10 +821,10 @@ class _MapdmsxState extends State<Mapdmsx> {
 
                             String urlApi =
                                 'https://pea23.com/apipsinsx/editDmsxBeforWmmrWhereId.php?isAdd=true&id=${dmsxModels[indexDirection].id}&image_befor_wmmr=$urlImage';
-                            await Dio().get(urlApi).then((value) {
+                            await dio.Dio().get(urlApi).then((value) {
                               readDataApi();
                               Navigator.pop(context);
-                                Navigator.pop(context);
+                              Navigator.pop(context);
                               Fluttertoast.showToast(msg: 'อัพโหลดสำเร็จ');
                             });
                           },
@@ -953,7 +1006,9 @@ class _MapdmsxState extends State<Mapdmsx> {
                   onPressed: () {
                     Navigator.pop(context);
                     processTakePhoto(
-                        dmsxmodel: dmsxmodel, source: ImageSource.gallery);
+                        dmsxmodel: dmsxmodel,
+                        source: ImageSource.gallery,
+                        distance: null, position: null);
                   },
                   child: Text('เลือกรูป'),
                 )
@@ -1002,7 +1057,9 @@ class _MapdmsxState extends State<Mapdmsx> {
   bool showUpload = false; // false Non Show Button Upload
 
   Future<void> processTakePhoto(
-      {Dmsxmodel dmsxmodel, ImageSource source}) async {
+      {Dmsxmodel dmsxmodel,
+      ImageSource source,
+      @required String distance, @required Position position}) async {
     try {
       var re = await FilePicker.platform.pickFiles(
         type: FileType.custom,
@@ -1075,6 +1132,16 @@ class _MapdmsxState extends State<Mapdmsx> {
                     'สถานะล่าสุด: ${dmsxmodel.statusTxt}',
                     style: TextStyle(fontSize: 12, color: Colors.red),
                   ),
+                  Text(
+                    'พิกัดเครื่อง: ${position.latitude} ${position.longitude}',
+                    style: TextStyle(fontSize: 12),
+                    
+                  ),
+               
+                  distance == null
+                      ? const SizedBox()
+                      : Text('ระยะห่าง : $distance กม.',
+                    style: TextStyle(fontSize: 12),),
                 ],
               ),
             ),
@@ -1093,7 +1160,7 @@ class _MapdmsxState extends State<Mapdmsx> {
             ),
             actions: [
               //showUpload ? buttonUpImage(context, file, dmsxmodel) : SizedBox(),
-              buttonUpImage(context, file, dmsxmodel),
+              buttonUpImage(context, file, dmsxmodel, position: position, distanceStr: distance),
               TextButton(
                 onPressed: () => Navigator.pop(context),
                 child: Text('ยกเลิก'),
@@ -1105,7 +1172,7 @@ class _MapdmsxState extends State<Mapdmsx> {
     } catch (e) {}
   }
 
-  Widget buttonUpImage(BuildContext context, File file, Dmsxmodel dmsxmodel) {
+  Widget buttonUpImage(BuildContext context, File file, Dmsxmodel dmsxmodel, {@required Position position, @required String distanceStr}) {
     return TextButton(
       onPressed: () async {
         Navigator.pop(context);
@@ -1136,11 +1203,11 @@ class _MapdmsxState extends State<Mapdmsx> {
           );
         } else {
           String nameFile = path.basename(file.path);
-          print('###dmsx nameFile = $nameFile');
-          print('###dmsx nameFile บน servver = ${dmsxmodel.images}');
+          print('##6mar nameFile = $nameFile');
+          print('##6mar nameFile บน servver = ${dmsxmodel.images}');
 
           if (dmsxmodel.images?.isEmpty ?? true) {
-            await processUploadAndEdit(file, nameFile, dmsxmodel);
+            await processUploadAndEdit(file, nameFile, dmsxmodel, position: position, distanceStr: distanceStr);
           } else {
             String string = dmsxmodel.images;
             string = string.substring(1, string.length - 1);
@@ -1164,7 +1231,7 @@ class _MapdmsxState extends State<Mapdmsx> {
             print('30jan dulucapImage === $dulucapeImage');
 
             if (!dulucapeImage) {
-              await processUploadAndEdit(file, nameFile, dmsxmodel);
+              await processUploadAndEdit(file, nameFile, dmsxmodel, position: position, distanceStr: distanceStr);
             } else {
               //รูปซ้ำ
               print('รูปซ้ำ');
@@ -1178,13 +1245,14 @@ class _MapdmsxState extends State<Mapdmsx> {
   }
 
   Future<void> processUploadAndEdit(
-      File file, String nameFile, Dmsxmodel dmsxmodel) async {
+      File file, String nameFile, Dmsxmodel dmsxmodel, {@required Position position, @required String distanceStr} ) async {
     String pathUpload = 'https://www.pea23.com/apipsinsx/saveImageCustomer.php';
 
     Map<String, dynamic> map = {};
-    map['file'] = await MultipartFile.fromFile(file.path, filename: nameFile);
-    FormData data = FormData.fromMap(map);
-    await Dio().post(pathUpload, data: data).then((value) async {
+    map['file'] =
+        await dio.MultipartFile.fromFile(file.path, filename: nameFile);
+    dio.FormData data = dio.FormData.fromMap(map);
+    await dio.Dio().post(pathUpload, data: data).then((value) async {
       print('# === value for upload ==>> $value');
       List<String> images = [];
       var listStatus = <String>[];
@@ -1227,9 +1295,9 @@ class _MapdmsxState extends State<Mapdmsx> {
       print('@@ listStatus === $listStatus');
 
       String apiEditImages =
-          'https://www.pea23.com/apipsinsx/editDmsxWhereId.php?isAdd=true&id=${dmsxmodel.id}&images=${images.toString()}&status_txt=$statusText&readNumber=$readNumber';
+          'https://www.pea23.com/apipsinsx/editDmsxWhereId.php?isAdd=true&id=${dmsxmodel.id}&images=${images.toString()}&status_txt=$statusText&readNumber=$readNumber&latMobile=${position.latitude}&lngMobile=${position.longitude}&distaneMobile=$distanceStr';
 
-      await Dio().get(apiEditImages).then((value) {
+      await dio.Dio().get(apiEditImages).then((value) {
         print('value update == $value');
         readDataApi().then((value) {
           takePhotoSpecial();
@@ -1330,7 +1398,7 @@ class _MapdmsxState extends State<Mapdmsx> {
 
     String urlAPI =
         'https://pea23.com/apipsinsx/getDmsxBeforImage.php?isAdd=true&dateStatus=$currentDateTime';
-    await Dio().get(urlAPI).then((value) {
+    await dio.Dio().get(urlAPI).then((value) {
       if (value.toString() == 'null') {
         displayIconTakePhoto = true;
       } else {

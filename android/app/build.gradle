@@ -41,8 +41,8 @@ def keystoreProperties = new Properties()
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "pea23.com.dmsxconn"
-        minSdkVersion 22
-        targetSdkVersion 33
+        minSdkVersion 23
+        targetSdkVersion 31
         versionCode 1
         versionName "1.0.0"
     }
