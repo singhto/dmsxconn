@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart' as dio;
+import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -13,8 +14,10 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:psinsx/models/dmsx_befor_image_model.dart';
 import 'package:psinsx/models/dmsx_model.dart';
+import 'package:psinsx/models/security_model.dart';
 import 'package:psinsx/pages/detail_money.dart';
 import 'package:psinsx/pages/dmsx_list_page.dart';
 import 'package:psinsx/utility/app_controller.dart';
@@ -32,6 +35,8 @@ import 'package:psinsx/widgets/show_tetle.dart';
 import 'package:psinsx/widgets/show_text.dart';
 import 'package:psinsx/widgets/widget_icon_button.dart';
 import 'package:psinsx/widgets/widget_text_button.dart';
+import 'package:psinsx/widgets/widget_text_rich.dart';
+import 'package:qrscan/qrscan.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Mapdmsx extends StatefulWidget {
@@ -616,9 +621,100 @@ class _MapdmsxState extends State<Mapdmsx> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     ShowText(text: 'PEA: ${dmsxModels[indexDirection].peaNo}'),
-                    ShowText(
-                        text:
-                            'ล่าสุด: ${dmsxModels[indexDirection].statusTxt}'),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ShowText(
+                            text:
+                                'ล่าสุด: ${dmsxModels[indexDirection].statusTxt}'),
+                        ((dmsxModels[indexDirection].statusTxt ==
+                                    'ต่อมิเตอร์แล้ว') ||
+                                (dmsxModels[indexDirection].statusTxt ==
+                                    'ต่อสายแล้ว'))
+                            ? WidgetIconButton(
+                                iconData: Icons.qr_code,
+                                pressFunc: () async {
+                                  MyDialog(context: context).normalDialot(
+                                    title: 'เลือกวิธีบันทึกบาร์โค้ด',
+                                    subTitle: 'Please Choser ',
+                                    firstButton: WidgetTextButton(
+                                      label: 'อ่านบาร์โค้ด',
+                                      pressFunc: () async {
+                                        Navigator.pop(context);
+                                        try {
+                                          await Permission.camera.status
+                                              .then((value) async {
+                                            if (value.isDenied) {
+                                              await Permission.camera
+                                                  .request()
+                                                  .then((value) {
+                                                if (value.isGranted) {
+                                                  //ok
+                                                } else {
+                                                  //cameraoff
+                                                }
+                                              });
+                                            } else {
+                                              //ok
+                                              var result = await scan();
+                                              if (reactive != null) {
+                                                print('result --> $result');
+
+                                                resultDialog(result,
+                                                    indexDirection:
+                                                        indexDirection);
+                                              }
+                                            }
+                                          });
+                                        } catch (e) {
+                                          print('error--> $e');
+                                        }
+                                      },
+                                    ),
+                                    secondButton: WidgetTextButton(
+                                        label: 'กรอกเอง',
+                                        pressFunc: () {
+                                          Navigator.pop(context);
+
+                                          String result;
+
+                                          MyDialog(context: context)
+                                              .normalDialot(
+                                                  title: 'กรอกตัวเลข',
+                                                  subTitle: '',
+                                                  contentWidget: TextFormField(
+                                                    onChanged: ((value) {
+                                                      result = value.trim();
+                                                    }),
+                                                    keyboardType:
+                                                        TextInputType.text,
+                                                    decoration: InputDecoration(
+                                                      border:
+                                                          OutlineInputBorder(),
+                                                    ),
+                                                  ),
+                                                  firstButton: WidgetTextButton(
+                                                    label: 'บันทึก',
+                                                    pressFunc: () {
+                                                      if (result.isNotEmpty) {
+                                                        Navigator.pop(context);
+                                                        print(
+                                                            'reult --> $result');
+                                                        resultDialog(result,
+                                                            indexDirection:
+                                                                indexDirection);
+                                                      }
+                                                    },
+                                                  ));
+                                        }),
+                                  );
+                                },
+                                edgeInsetsGeometry:
+                                    EdgeInsets.symmetric(horizontal: 4),
+                              )
+                            : const SizedBox()
+                      ],
+                    ),
                   ],
                 ),
                 Row(
@@ -692,14 +788,16 @@ class _MapdmsxState extends State<Mapdmsx> {
 
                           print('##6mar distance= $distance');
 
-                          NumberFormat numberFormat = NumberFormat('##0.0#', 'en_US');
+                          NumberFormat numberFormat =
+                              NumberFormat('##0.0#', 'en_US');
 
                           String distanceStr = numberFormat.format(distance);
 
                           processTakePhoto(
                               dmsxmodel: dmsxModels[indexDirection],
                               source: ImageSource.gallery,
-                              distance: distanceStr, position: position);
+                              distance: distanceStr,
+                              position: position);
                         }
                       },
                       child: ShowText(text: 'เลือกรูป'),
@@ -768,6 +866,61 @@ class _MapdmsxState extends State<Mapdmsx> {
         ),
       ],
     );
+  }
+
+  Future<void> resultDialog(String result,
+      {@required int indexDirection}) async {
+    String path =
+        'https://www.pea23.com/apipsinsx/getSecurityWhereSerialNo.php?isAdd=true&serial_no=$result';
+
+    var response = await Dio().get(path);
+    if (response.toString() == 'null') {
+      //code readed false
+      MyDialog(context: context)
+          .normalDialot(title: 'เลขผิด', subTitle: 'ไม่มีเลข Security นี้');
+    } else {
+      //code readed true
+      MyDialog(context: context).normalDialot(
+        title: 'เลข : $result',
+        subTitle: '',
+        contentWidget: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            WidgetTextRich(head: 'ca', value: dmsxModels[indexDirection].ca),
+            WidgetTextRich(
+                head: 'notice', value: dmsxModels[indexDirection].notice),
+            WidgetTextRich(
+                head: 'pea', value: dmsxModels[indexDirection].peaNo),
+            WidgetTextRich(
+                head: 'ชื่อ', value: dmsxModels[indexDirection].cusName),
+          ],
+        ),
+        firstButton: WidgetTextButton(label: 'Update', pressFunc: () async {
+          for (var element in json.decode(response.data)) {
+            SecurityModel model = SecurityModel.fromMap(element);
+            print('##31mar secutityModel readed --> ${model.toMap()}');
+
+            Map<String, dynamic> map = model.toMap();
+            map['notice'] = dmsxModels[indexDirection].notice;
+            map['ca'] = dmsxModels[indexDirection].ca;
+            map['pea_no'] = dmsxModels[indexDirection].peaNo;
+            map['user_id'] = dmsxModels[indexDirection].userId;
+
+            print('##31mar map ==> $map');
+
+            model = SecurityModel.fromMap(map);
+
+            String urlApi = 'https://www.pea23.com/apipsinsx/editSecurityWhereSerialNo.php?isAdd=true&serial_no=${model.serial_no}&notice=${model.notice}&ca=${model.ca}&pea_no=${model.pea_no}&user_id=${model.user_id}';
+            await Dio().get(urlApi).then((value) {
+              Fluttertoast.showToast(msg: 'อัพเดทสำเร็จ');
+              Navigator.pop(context);
+            });
+
+          }
+        },)
+      );
+    }
   }
 
   void takePhotoSpecial() {
@@ -1008,7 +1161,8 @@ class _MapdmsxState extends State<Mapdmsx> {
                     processTakePhoto(
                         dmsxmodel: dmsxmodel,
                         source: ImageSource.gallery,
-                        distance: null, position: null);
+                        distance: null,
+                        position: null);
                   },
                   child: Text('เลือกรูป'),
                 )
@@ -1059,7 +1213,8 @@ class _MapdmsxState extends State<Mapdmsx> {
   Future<void> processTakePhoto(
       {Dmsxmodel dmsxmodel,
       ImageSource source,
-      @required String distance, @required Position position}) async {
+      @required String distance,
+      @required Position position}) async {
     try {
       var re = await FilePicker.platform.pickFiles(
         type: FileType.custom,
@@ -1135,13 +1290,13 @@ class _MapdmsxState extends State<Mapdmsx> {
                   Text(
                     'พิกัดเครื่อง: ${position.latitude} ${position.longitude}',
                     style: TextStyle(fontSize: 12),
-                    
                   ),
-               
                   distance == null
                       ? const SizedBox()
-                      : Text('ระยะห่าง : $distance กม.',
-                    style: TextStyle(fontSize: 12),),
+                      : Text(
+                          'ระยะห่าง : $distance กม.',
+                          style: TextStyle(fontSize: 12),
+                        ),
                 ],
               ),
             ),
@@ -1160,7 +1315,8 @@ class _MapdmsxState extends State<Mapdmsx> {
             ),
             actions: [
               //showUpload ? buttonUpImage(context, file, dmsxmodel) : SizedBox(),
-              buttonUpImage(context, file, dmsxmodel, position: position, distanceStr: distance),
+              buttonUpImage(context, file, dmsxmodel,
+                  position: position, distanceStr: distance),
               TextButton(
                 onPressed: () => Navigator.pop(context),
                 child: Text('ยกเลิก'),
@@ -1172,7 +1328,8 @@ class _MapdmsxState extends State<Mapdmsx> {
     } catch (e) {}
   }
 
-  Widget buttonUpImage(BuildContext context, File file, Dmsxmodel dmsxmodel, {@required Position position, @required String distanceStr}) {
+  Widget buttonUpImage(BuildContext context, File file, Dmsxmodel dmsxmodel,
+      {@required Position position, @required String distanceStr}) {
     return TextButton(
       onPressed: () async {
         Navigator.pop(context);
@@ -1207,7 +1364,8 @@ class _MapdmsxState extends State<Mapdmsx> {
           print('##6mar nameFile บน servver = ${dmsxmodel.images}');
 
           if (dmsxmodel.images?.isEmpty ?? true) {
-            await processUploadAndEdit(file, nameFile, dmsxmodel, position: position, distanceStr: distanceStr);
+            await processUploadAndEdit(file, nameFile, dmsxmodel,
+                position: position, distanceStr: distanceStr);
           } else {
             String string = dmsxmodel.images;
             string = string.substring(1, string.length - 1);
@@ -1231,7 +1389,8 @@ class _MapdmsxState extends State<Mapdmsx> {
             print('30jan dulucapImage === $dulucapeImage');
 
             if (!dulucapeImage) {
-              await processUploadAndEdit(file, nameFile, dmsxmodel, position: position, distanceStr: distanceStr);
+              await processUploadAndEdit(file, nameFile, dmsxmodel,
+                  position: position, distanceStr: distanceStr);
             } else {
               //รูปซ้ำ
               print('รูปซ้ำ');
@@ -1245,7 +1404,8 @@ class _MapdmsxState extends State<Mapdmsx> {
   }
 
   Future<void> processUploadAndEdit(
-      File file, String nameFile, Dmsxmodel dmsxmodel, {@required Position position, @required String distanceStr} ) async {
+      File file, String nameFile, Dmsxmodel dmsxmodel,
+      {@required Position position, @required String distanceStr}) async {
     String pathUpload = 'https://www.pea23.com/apipsinsx/saveImageCustomer.php';
 
     Map<String, dynamic> map = {};
