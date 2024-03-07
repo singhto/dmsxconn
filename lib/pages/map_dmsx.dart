@@ -636,9 +636,9 @@ class _MapdmsxState extends State<Mapdmsx> {
                                 pressFunc: () async {
                                   MyDialog(context: context).normalDialot(
                                     title: 'เลือกวิธีบันทึกบาร์โค้ด',
-                                    subTitle: 'Please Choser ',
+                                    subTitle: 'กรุณาเลือกวิธีการบันทึก SerialNo',
                                     firstButton: WidgetTextButton(
-                                      label: 'อ่านบาร์โค้ด',
+                                      label: 'แสกนบาร์โค้ด',
                                       pressFunc: () async {
                                         Navigator.pop(context);
                                         try {
@@ -672,7 +672,7 @@ class _MapdmsxState extends State<Mapdmsx> {
                                       },
                                     ),
                                     secondButton: WidgetTextButton(
-                                        label: 'กรอกเอง',
+                                        label: 'พิมพ์ตัวเลข',
                                         pressFunc: () {
                                           Navigator.pop(context);
 
@@ -881,7 +881,7 @@ class _MapdmsxState extends State<Mapdmsx> {
     } else {
       //code readed true
       MyDialog(context: context).normalDialot(
-        title: 'เลข : $result',
+        title: 'SecurityNo : $result',
         subTitle: '',
         contentWidget: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -889,14 +889,14 @@ class _MapdmsxState extends State<Mapdmsx> {
           children: [
             WidgetTextRich(head: 'ca', value: dmsxModels[indexDirection].ca),
             WidgetTextRich(
-                head: 'notice', value: dmsxModels[indexDirection].notice),
+                head: 'ใบสั่ง', value: dmsxModels[indexDirection].notice),
             WidgetTextRich(
                 head: 'pea', value: dmsxModels[indexDirection].peaNo),
             WidgetTextRich(
                 head: 'ชื่อ', value: dmsxModels[indexDirection].cusName),
           ],
         ),
-        firstButton: WidgetTextButton(label: 'Update', pressFunc: () async {
+        firstButton: WidgetTextButton(label: 'บันทึก', pressFunc: () async {
           for (var element in json.decode(response.data)) {
             SecurityModel model = SecurityModel.fromMap(element);
             print('##31mar secutityModel readed --> ${model.toMap()}');

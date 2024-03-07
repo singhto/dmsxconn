@@ -5,7 +5,10 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:psinsx/models/data_location_model.dart';
+import 'package:psinsx/utility/my_dialog.dart';
 import 'package:psinsx/utility/normal_dialog.dart';
+import 'package:psinsx/widgets/widget_icon_button.dart';
+import 'package:psinsx/widgets/widget_text_rich.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SearchPage extends StatefulWidget {
@@ -112,6 +115,10 @@ class _SearchPageState extends State<SearchPage> {
               ),
               onPressed: () {
                 if (search?.isEmpty ?? true) {
+                  if (dataLocationModels.length != 0) {
+                    dataLocationModels.clear();
+                    setState(() {});
+                  }
                   normalDialog(context, 'ห้ามมีช่องว่าง');
                 } else {
                   readAllData();
@@ -129,12 +136,30 @@ class _SearchPageState extends State<SearchPage> {
           itemBuilder: (BuildContext context, int index) {
             return GestureDetector(
               onTap: () async {
-                String url = dataLocationModels[index].ptcInsx;
-                if (await canLaunch(url)) {
-                  await launch(url);
-                } else {
-                  throw 'ไม่พบ $url';
-                }
+                print('datalocation == ${dataLocationModels[index].toJson()}');
+                MyDialog(context: context).normalDialot(
+                  title: 'รายละเอียด',
+                  subTitle: 'รายละเอียดรูปภาพสถานที่ใช้ไฟฟ้า',
+                  contentWidget: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Image.network(
+                        dataLocationModels[index].imageInsx,
+                        width: 100,
+                        fit: BoxFit.cover,
+                      ),
+                      WidgetTextRich(
+                        head: 'Ca',
+                        value: dataLocationModels[index].ca,
+                      ),
+                      WidgetTextRich(
+                        head: 'CusName',
+                        value: dataLocationModels[index].cusName,
+                      ),
+                    ],
+                  ),
+                );
               },
               child: Card(
                 child: ListTile(
@@ -145,7 +170,18 @@ class _SearchPageState extends State<SearchPage> {
                       print('${dataLocationModels[index].cusTel}')
                     },
                   ),
-                  leading: Icon(Icons.location_on_outlined),
+                  leading: WidgetIconButton(
+                    iconData: Icons.location_on_outlined,
+                    pressFunc: () async {
+                      String url = dataLocationModels[index].ptcInsx;
+
+                      if (await canLaunch(url)) {
+                        await launch(url);
+                      } else {
+                        throw 'ไม่พบ $url';
+                      }
+                    },
+                  ),
                   title: Text(dataLocationModels[index].ca),
                   subtitle: Text(
                     '${dataLocationModels[index].cusName} \n ${dataLocationModels[index].imgDate}',
