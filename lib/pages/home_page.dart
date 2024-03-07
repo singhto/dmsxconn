@@ -14,6 +14,7 @@ import 'package:psinsx/pages/help_page.dart';
 import 'package:psinsx/pages/information_user.dart';
 import 'package:psinsx/pages/map.dart';
 import 'package:psinsx/pages/map_dmsx.dart';
+import 'package:psinsx/pages/search_dmsx.dart';
 import 'package:psinsx/pages/search_page.dart';
 import 'package:psinsx/pages/signin_page.dart';
 import 'package:psinsx/pages/take_photo_id.dart';
@@ -26,6 +27,7 @@ import 'package:psinsx/widgets/show_text.dart';
 import 'package:psinsx/widgets/widget_text_button.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:upgrader/upgrader.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatefulWidget {
@@ -48,7 +50,8 @@ class _HomePageState extends State<HomePage> {
   List pages = [
     // MyMap2(),
     Mapdmsx(),
-    SearchPage(),
+    // SearchPage(),
+    SearchDmsx(),
     Dashbord(),
   ];
 
@@ -86,7 +89,7 @@ class _HomePageState extends State<HomePage> {
     }
     //pages.add(online ? MyMap2() : MyMap());
     pages.add(Mapdmsx());
-    pages.add(SearchPage());
+    pages.add(SearchDmsx(displayBackIcon: false,));
     pages.add(Dashbord());
   }
 
@@ -178,154 +181,156 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            showDrawerHeader(),
-            ListTile(
-                leading: Icon(Icons.person_pin),
-                title: Text('ข้อมูลส่วนตัว'),
-                subtitle: Text(
-                  'ข้อมูลส่วนตัวของพนักงาน',
-                  style: TextStyle(fontSize: 10),
-                ),
-                trailing: Icon(Icons.arrow_right),
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => InformationUser()));
-                }),
-            ListTile(
-                leading: Icon(Icons.help),
-                title: Text('ช่วยเหลือ'),
-                subtitle: Text(
-                  'ช่วยเหลือ คู่มือต่าง',
-                  style: TextStyle(fontSize: 10),
-                ),
-                trailing: Icon(Icons.arrow_right),
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => HelpPage()));
-                }),
-            ListTile(
-                leading: Icon(Icons.download_rounded),
-                title: Text('ดึงข้อมูล'),
-                subtitle: Text(
-                  'เปิดเว็ปไซต์บริษัท,แหล่งข้อมูล',
-                  style: TextStyle(fontSize: 10),
-                ),
-                trailing: Icon(Icons.arrow_right),
-                onTap: () {
-                  Navigator.pop(context);
-                  launchURL();
-                }),
-            ListTile(
-              leading: Icon(Icons.logout),
-              title: Text('ออกจากระบบ'),
-              subtitle: Text(
-                'ออกจากระบบ',
-                style: TextStyle(fontSize: 10),
-              ),
-              onTap: () {
-                //signOutProcess();
-                //deleteAllData();
-                confirmDialog();
-              },
-            ),
-            Divider(),
-            ListTile(
-              title: Text('Version 1.0.0'),
-              subtitle: Text(
-                'อัพเดทเมื่อ 31 มีนาคม 2566',
-                style: TextStyle(fontSize: 10),
-              ),
-            ),
-          ],
-        ),
-      ),
-      appBar: AppBar(
-        title: Center(
-          child: Row(
+    return UpgradeAlert(
+      child: Scaffold(
+        drawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
             children: [
-              ShowText(
-                text: title[selectedIndex],
-                textStyle: MyConstant().h2Style(),
+              showDrawerHeader(),
+              ListTile(
+                  leading: Icon(Icons.person_pin),
+                  title: Text('ข้อมูลส่วนตัว'),
+                  subtitle: Text(
+                    'ข้อมูลส่วนตัวของพนักงาน',
+                    style: TextStyle(fontSize: 10),
+                  ),
+                  trailing: Icon(Icons.arrow_right),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => InformationUser()));
+                  }),
+              ListTile(
+                  leading: Icon(Icons.help),
+                  title: Text('ช่วยเหลือ'),
+                  subtitle: Text(
+                    'ช่วยเหลือ คู่มือต่าง',
+                    style: TextStyle(fontSize: 10),
+                  ),
+                  trailing: Icon(Icons.arrow_right),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => HelpPage()));
+                  }),
+              ListTile(
+                  leading: Icon(Icons.download_rounded),
+                  title: Text('ดึงข้อมูล'),
+                  subtitle: Text(
+                    'เปิดเว็ปไซต์บริษัท,แหล่งข้อมูล',
+                    style: TextStyle(fontSize: 10),
+                  ),
+                  trailing: Icon(Icons.arrow_right),
+                  onTap: () {
+                    Navigator.pop(context);
+                    launchURL();
+                  }),
+              ListTile(
+                leading: Icon(Icons.logout),
+                title: Text('ออกจากระบบ'),
+                subtitle: Text(
+                  'ออกจากระบบ',
+                  style: TextStyle(fontSize: 10),
+                ),
+                onTap: () {
+                  //signOutProcess();
+                  //deleteAllData();
+                  confirmDialog();
+                },
               ),
-              Text(
-                // online ? ' ออนไลน์' : ' ออฟไลน์',
-                '',
-                style: TextStyle(
-                    fontSize: 8,
-                    fontWeight: FontWeight.bold,
-                    color: online ? Colors.green : Colors.red),
+              Divider(),
+              ListTile(
+                title: Text('Version 1.0.2'),
+                subtitle: Text(
+                  'อัพเดทเมื่อ 7 มีนาคม 2567',
+                  style: TextStyle(fontSize: 10),
+                ),
               ),
             ],
           ),
         ),
-        actions: [
-          // selectedIndex == 0
-          //     ? Switch(
-          //         value: online,
-          //         onChanged: (velue) {
-          //           setState(() {
-          //             online = velue;
-          //             cratePages();
-          //           });
-          //         })
-          //     : const SizedBox(),
-          InkWell(
-            onTap: () {
-              moveToEditProfile();
+        appBar: AppBar(
+          title: Center(
+            child: Row(
+              children: [
+                ShowText(
+                  text: title[selectedIndex],
+                  textStyle: MyConstant().h2Style(),
+                ),
+                Text(
+                  // online ? ' ออนไลน์' : ' ออฟไลน์',
+                  '',
+                  style: TextStyle(
+                      fontSize: 8,
+                      fontWeight: FontWeight.bold,
+                      color: online ? Colors.green : Colors.red),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            // selectedIndex == 0
+            //     ? Switch(
+            //         value: online,
+            //         onChanged: (velue) {
+            //           setState(() {
+            //             online = velue;
+            //             cratePages();
+            //           });
+            //         })
+            //     : const SizedBox(),
+            InkWell(
+              onTap: () {
+                moveToEditProfile();
+              },
+              child: CircularProfileAvatar(
+                '$userImge',
+                borderWidth: 2,
+                radius: 28,
+                elevation: 5.0,
+                cacheImage: true,
+                foregroundColor: Colors.brown.withOpacity(0.5),
+                imageFit: BoxFit.cover,
+              ),
+            )
+          ],
+        ),
+        body: pages[selectedIndex],
+        bottomNavigationBar: BottomNavigationBar(
+            backgroundColor: Color(0xff6a1b9a),
+            selectedItemColor: Colors.white,
+            unselectedItemColor: Color(0xffce93d8),
+            showUnselectedLabels: true,
+            currentIndex: selectedIndex,
+            onTap: (int index) {
+              if (online) {
+                setState(() {
+                  selectedIndex = index;
+                });
+              } else {
+                normalDialog(context, 'กรุณาเปิดโหมด ออนไลน์ ก่อนครับ');
+              }
             },
-            child: CircularProfileAvatar(
-              '$userImge',
-              borderWidth: 2,
-              radius: 28,
-              elevation: 5.0,
-              cacheImage: true,
-              foregroundColor: Colors.brown.withOpacity(0.5),
-              imageFit: BoxFit.cover,
-            ),
-          )
-        ],
+            items: [
+              // BottomNavigationBarItem(
+              //   icon: Icon(Icons.notifications_active),
+              //   label: 'แจ้งเตือน',
+              // ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.map),
+                label: 'งดจ่ายไฟ',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.search),
+                label: 'ประวัติ',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                label: 'หน้าหลัก',
+              ),
+            ]),
       ),
-      body: pages[selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-          backgroundColor: Color(0xff6a1b9a),
-          selectedItemColor: Colors.white,
-          unselectedItemColor: Color(0xffce93d8),
-          showUnselectedLabels: true,
-          currentIndex: selectedIndex,
-          onTap: (int index) {
-            if (online) {
-              setState(() {
-                selectedIndex = index;
-              });
-            } else {
-              normalDialog(context, 'กรุณาเปิดโหมด ออนไลน์ ก่อนครับ');
-            }
-          },
-          items: [
-            // BottomNavigationBarItem(
-            //   icon: Icon(Icons.notifications_active),
-            //   label: 'แจ้งเตือน',
-            // ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.map),
-              label: 'งดจ่ายไฟ',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.search),
-              label: 'ประวัติ',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'หน้าหลัก',
-            ),
-          ]),
     );
   }
 

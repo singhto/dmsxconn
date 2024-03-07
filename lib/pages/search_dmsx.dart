@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+
 import 'package:psinsx/models/dmsx_model.dart';
 import 'package:psinsx/pages/show_map_from_search.dart';
 import 'package:psinsx/utility/my_constant.dart';
@@ -12,7 +13,12 @@ import 'package:psinsx/widgets/show_form.dart';
 import 'package:psinsx/widgets/show_text.dart';
 
 class SearchDmsx extends StatefulWidget {
-  const SearchDmsx({Key key}) : super(key: key);
+  const SearchDmsx({
+    Key key,
+    this.displayBackIcon,
+  }) : super(key: key);
+
+  final bool displayBackIcon;
 
   @override
   State<SearchDmsx> createState() => _SearchDmsxState();
@@ -22,13 +28,19 @@ class _SearchDmsxState extends State<SearchDmsx> {
   final formStateKey = GlobalKey<FormState>();
   String search;
   var dmsxModels = <Dmsxmodel>[];
+  bool displayBackIcon = true;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.displayBackIcon !=null) {
+      displayBackIcon = widget.displayBackIcon;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('ค้นหาพิกัดงดจ่ายไฟ'),
-      ),
       body: Form(
         key: formStateKey,
         child: GestureDetector(
@@ -37,6 +49,13 @@ class _SearchDmsxState extends State<SearchDmsx> {
           child: Center(
             child: ListView(
               children: [
+               displayBackIcon ?  ListTile(
+                  leading: IconButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      }, icon: Icon(Icons.arrow_back)),
+                  title: Text('ค้นหาพิกัดงดจ่ายไฟ'),
+                ) : const SizedBox(),
                 SizedBox(
                   height: 20,
                 ),

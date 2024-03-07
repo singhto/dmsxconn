@@ -164,7 +164,7 @@ class _DashbordState extends State<Dashbord> {
                       Icons.settings,
                       size: 100,
                     ),
-                    Text('Veision 1.0.0'),
+                    Text('Veision 1.0.2'),
                   ],
                 ),
               ),
