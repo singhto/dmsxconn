@@ -23,6 +23,8 @@ final Map<String, WidgetBuilder> map = {
   '/insxPage': (BuildContext context) => InsxPageOld(),
 };
 
+///Applications
+
 String initialRount;
 
 Future<Null> main() async {
