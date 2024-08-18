@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:psinsx/pages/help_page.dart';
 import 'package:psinsx/pages/information_user.dart';
 import 'package:psinsx/pages/search_dmsx.dart';
+import 'package:psinsx/utility/app_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -135,8 +136,7 @@ class _DashbordState extends State<Dashbord> {
                   ),
                 ),
               ),
-
-                 InkWell(
+              InkWell(
                 onTap: () {
                   launchURL();
                 },
@@ -154,18 +154,22 @@ class _DashbordState extends State<Dashbord> {
                   ),
                 ),
               ),
-
-              Container(
-                padding: const EdgeInsets.all(8),
-                color: Color.fromARGB(255, 177, 47, 220),
-                child: Column(
-                  children: [
-                    Icon(
-                      Icons.settings,
-                      size: 100,
-                    ),
-                    Text('Veision 1.0.2'),
-                  ],
+              InkWell(
+                onTap: () {
+                  AppService().processChooseMultiImage(context: context);
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  color: Color.fromARGB(255, 177, 47, 220),
+                  child: Column(
+                    children: [
+                      Icon(
+                        Icons.upload_file,
+                        size: 100,
+                      ),
+                      Text('อัพโหลดภาพ'),
+                    ],
+                  ),
                 ),
               ),
             ],
