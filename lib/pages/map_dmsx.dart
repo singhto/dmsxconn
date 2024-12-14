@@ -762,7 +762,9 @@ class _MapdmsxState extends State<Mapdmsx> {
                       child: Text('นำทาง'),
                     ),
                     ElevatedButton(
-                      onPressed: () async {
+                      onPressed: 
+                      
+                      () async {
                         var permissionStorage = await Permission.storage.status;
 
                         if (permissionStorage.isDenied) {
@@ -773,9 +775,12 @@ class _MapdmsxState extends State<Mapdmsx> {
                               subTitle: 'กรุณาอนุญาติแอพ',
                               firstButton: WidgetTextButton(
                                 label: 'ไปอนุญาตแอพ',
-                                pressFunc: () {
+                                pressFunc: () async {
                                   navigator.pop();
-                                  openAppSettings();
+                                  // openAppSettings();
+
+                                  await Permission.storage.request();
+
                                 },
                               ));
                         } else {
@@ -1488,6 +1493,10 @@ class _MapdmsxState extends State<Mapdmsx> {
       }
 
       print('@@ listStatus === $listStatus');
+
+
+
+      
 
       String apiEditImages =
           'https://pea23.com/apipsinsx/editDmsxWhereId.php?isAdd=true&id=${dmsxmodel.id}&images=${images.toString()}&status_txt=$statusText&readNumber=$readNumber&latMobile=${position.latitude}&lngMobile=${position.longitude}&distaneMobile=$distanceStr';

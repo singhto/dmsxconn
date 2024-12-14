@@ -63,6 +63,7 @@ class _HomePageState extends State<HomePage> {
     'งดจ่ายไฟ',
     'ประวัติ',
     'หน้าหลัก',
+    
   ];
 
   AppController appController = Get.put(AppController());
@@ -241,9 +242,9 @@ class _HomePageState extends State<HomePage> {
               ),
               Divider(),
               ListTile(
-                title: Text('Version 1.0.2'),
+                title: Text('Version 1.0.3'),
                 subtitle: Text(
-                  'อัพเดทเมื่อ 7 มีนาคม 2567',
+                  'อัพเดทเมื่อ 18 สิงหาคม  2567',
                   style: TextStyle(fontSize: 10),
                 ),
               ),
