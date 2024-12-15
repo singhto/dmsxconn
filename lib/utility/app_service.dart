@@ -98,7 +98,7 @@ class AppService {
 
                 for (var i = 0; i < appController.xFiles.length; i++) {
                   String urlAPIsave =
-                      'https://pea23.com/apipsinsx/saveImageJob.php';
+                      'https://www.pea23.com/apipsinsx/saveImageJob.php';
 
                   File file = File(appController.xFiles[i].path);
 
@@ -118,7 +118,7 @@ class AppService {
                   String id = preferences.getString('id');
 
                   String urlApiInsert =
-                      'https://pea23.com/apipsinsx/insertImageJob.php?isAdd=true&image_name=${appController.nameFiles[i]}&user_id=$id';
+                      'https://www.pea23.com/apipsinsx/insertImageJob.php?isAdd=true&image_name=${appController.nameFiles[i]}&user_id=$id';
 
                       await dio.Dio().get(urlApiInsert).then((value) {
                         Get.snackbar('สำเร็จ!', 'คุณอัพโหลดภาพสำเร็จแล้ว');
@@ -133,7 +133,7 @@ class AppService {
   }
 
   Future<bool> checkNameImage({String nameImage}) async {
-    String path = 'https://pea23.com/apipsinsx/readAllImageUpload.php';
+    String path = 'https://www.pea23.com/apipsinsx/readAllImageUpload.php';
 
     bool response = false; //ชื่อไม่ซ้ำ ใช้ได้
 

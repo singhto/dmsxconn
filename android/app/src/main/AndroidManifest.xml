@@ -2,9 +2,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="pea23.com.dmsxconn">
 
+     <!-- เพิ่ม queries ที่นี่ -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.MANAGE_APP_ALL_FILES_ACCESS_PERMISSION" />
+        </intent>
+    </queries>
+
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <!-- เฉพาะ Android 11 ขึ้นไป -->  
+    <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION" />
+
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!-- The following two permissions are not required to use

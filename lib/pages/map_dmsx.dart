@@ -5,7 +5,6 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:dio/dio.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -205,7 +204,7 @@ class _MapdmsxState extends State<Mapdmsx> {
           dmsxModels.clear();
         }
         String path =
-            'https://pea23.com/apipsinsx/getDmsxWherUser.php?isAdd=true&user_id=$value';
+            'https://www.pea23.com/apipsinsx/getDmsxWherUser.php?isAdd=true&user_id=$value';
 
         print('###1feb path ==>>> $path');
 
@@ -574,7 +573,7 @@ class _MapdmsxState extends State<Mapdmsx> {
   }
 
   Future<Null> launchURLloadWork() async {
-    final url = 'https://pea23.com/index.php';
+    final url = 'https://www.pea23.com/index.php';
     await launch(url);
     if (await canLaunch(url)) {
       await launch(url);
@@ -591,7 +590,7 @@ class _MapdmsxState extends State<Mapdmsx> {
       children: [
         Card(
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(4.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
@@ -611,127 +610,162 @@ class _MapdmsxState extends State<Mapdmsx> {
                     )
                   ],
                 ),
-                SizedBox(width: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    ShowText(text: 'PEA: ${dmsxModels[indexDirection].peaNo}'),
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        ShowText(
-                            text:
-                                'ล่าสุด: ${dmsxModels[indexDirection].statusTxt}'),
-                        ((dmsxModels[indexDirection].statusTxt ==
-                                    'ต่อมิเตอร์แล้ว') ||
-                                (dmsxModels[indexDirection].statusTxt ==
-                                    'ต่อสายแล้ว'))
-                            ? WidgetIconButton(
-                                iconData: Icons.qr_code,
-                                pressFunc: () async {
-                                  MyDialog(context: context).normalDialot(
-                                    title: 'เลือกวิธีบันทึกบาร์โค้ด',
-                                    subTitle:
-                                        'กรุณาเลือกวิธีการบันทึก SerialNo',
-                                    firstButton: WidgetTextButton(
-                                      label: 'แสกนบาร์โค้ด',
-                                      pressFunc: () async {
-                                        Navigator.pop(context);
-                                        try {
-                                          await Permission.camera.status
-                                              .then((value) async {
-                                            if (value.isDenied) {
-                                              await Permission.camera
-                                                  .request()
-                                                  .then((value) {
-                                                if (value.isGranted) {
-                                                  //ok
-                                                } else {
-                                                  //cameraoff
-                                                }
-                                              });
-                                            } else {
-                                              //ok
-                                              var result = await scan();
-                                              if (reactive != null) {
-                                                print('result --> $result');
-
-                                                resultDialog(result,
-                                                    indexDirection:
-                                                        indexDirection);
-                                              }
-                                            }
-                                          });
-                                        } catch (e) {
-                                          print('error--> $e');
+            
+                ShowTitle(
+                  title: MyCalculate().canculateDifferance(
+                      statusDate: dmsxModels[indexDirection].dataStatus,
+                      refNotification: dmsxModels[indexDirection].refnoti_date),
+                ),
+                ShowText(
+                    text: 'ล่าสุด: ${dmsxModels[indexDirection].statusTxt}'),
+                ((dmsxModels[indexDirection].statusTxt == 'ต่อมิเตอร์แล้ว') ||
+                        (dmsxModels[indexDirection].statusTxt == 'ต่อสายแล้ว'))
+                    ? WidgetIconButton(
+                        iconData: Icons.qr_code,
+                        pressFunc: () async {
+                          MyDialog(context: context).normalDialot(
+                            title: 'เลือกวิธีบันทึกบาร์โค้ด',
+                            subTitle: 'กรุณาเลือกวิธีการบันทึก SerialNo',
+                            firstButton: WidgetTextButton(
+                              label: 'แสกนบาร์โค้ด',
+                              pressFunc: () async {
+                                Navigator.pop(context);
+                                try {
+                                  await Permission.camera.status
+                                      .then((value) async {
+                                    if (value.isDenied) {
+                                      await Permission.camera
+                                          .request()
+                                          .then((value) {
+                                        if (value.isGranted) {
+                                          //ok
+                                        } else {
+                                          //cameraoff
                                         }
-                                      },
-                                    ),
-                                    secondButton: WidgetTextButton(
-                                        label: 'พิมพ์ตัวเลข',
-                                        pressFunc: () {
-                                          Navigator.pop(context);
+                                      });
+                                    } else {
+                                      //ok
+                                      var result = await scan();
+                                      if (reactive != null) {
+                                        print('result --> $result');
 
-                                          String result;
+                                        resultDialog(result,
+                                            indexDirection: indexDirection);
+                                      }
+                                    }
+                                  });
+                                } catch (e) {
+                                  print('error--> $e');
+                                }
+                              },
+                            ),
+                            secondButton: WidgetTextButton(
+                                label: 'พิมพ์ตัวเลข',
+                                pressFunc: () {
+                                  Navigator.pop(context);
 
-                                          MyDialog(context: context)
-                                              .normalDialot(
-                                                  title: 'กรอกตัวเลข',
-                                                  subTitle: '',
-                                                  contentWidget: TextFormField(
-                                                    onChanged: ((value) {
-                                                      result = value.trim();
-                                                    }),
-                                                    keyboardType:
-                                                        TextInputType.text,
-                                                    decoration: InputDecoration(
-                                                      border:
-                                                          OutlineInputBorder(),
-                                                    ),
-                                                  ),
-                                                  firstButton: WidgetTextButton(
-                                                    label: 'บันทึก',
-                                                    pressFunc: () {
-                                                      if (result.isNotEmpty) {
-                                                        Navigator.pop(context);
-                                                        print(
-                                                            'reult --> $result');
-                                                        resultDialog(result,
-                                                            indexDirection:
-                                                                indexDirection);
-                                                      }
-                                                    },
-                                                  ));
+                                  String result;
+
+                                  MyDialog(context: context).normalDialot(
+                                      title: 'กรอกตัวเลข',
+                                      subTitle: '',
+                                      contentWidget: TextFormField(
+                                        onChanged: ((value) {
+                                          result = value.trim();
                                         }),
-                                  );
-                                },
-                                edgeInsetsGeometry:
-                                    EdgeInsets.symmetric(horizontal: 4),
-                              )
-                            : const SizedBox()
-                      ],
-                    ),
-                  ],
-                ),
+                                        keyboardType: TextInputType.text,
+                                        decoration: InputDecoration(
+                                          border: OutlineInputBorder(),
+                                        ),
+                                      ),
+                                      firstButton: WidgetTextButton(
+                                        label: 'บันทึก',
+                                        pressFunc: () {
+                                          if (result.isNotEmpty) {
+                                            Navigator.pop(context);
+                                            print('reult --> $result');
+                                            resultDialog(result,
+                                                indexDirection: indexDirection);
+                                          }
+                                        },
+                                      ));
+                                }),
+                          );
+                        },
+                        edgeInsetsGeometry: EdgeInsets.symmetric(horizontal: 4),
+                      )
+                    : const SizedBox(),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      children: [
-                        ShowText(text: 'ชื่อ:'),
-                        ShowText(text: dmsxModels[indexDirection].cusName),
-                      ],
-                    ),
-                    ShowTitle(
-                      title: MyCalculate().canculateDifferance(
-                          statusDate: dmsxModels[indexDirection].dataStatus,
-                          refNotification:
-                              dmsxModels[indexDirection].refnoti_date),
-                    ),
+                    ShowText(text: 'ชื่อ:'),
+                    ShowText(text: dmsxModels[indexDirection].cusName),
                   ],
                 ),
+
                 ShowText(text: dmsxModels[indexDirection].address),
                 buildImages(dmsxModels[indexDirection].images),
+                // Row(
+                //   children: [
+                //     ShowText(
+                //         text:
+                //             '${dmsxModels[indexDirection].lat}, ${dmsxModels[indexDirection].lng}'),
+                //     WidgetIconButton(
+                //       iconData: Icons.edit,
+                //       pressFunc: () {
+                //         final keyForm = GlobalKey<FormState>();
+
+                //         TextEditingController textEditingController =
+                //             TextEditingController();
+
+                //         MyDialog(context: context).normalDialot(
+                //             title: 'แก้ไข',
+                //             subTitle: 'แก้ไขพิกัด',
+                //             contentWidget: Form(
+                //               key: keyForm,
+                //               child: TextFormField(
+                //                 controller: textEditingController,
+                //                 validator: (value) {
+                //                   if (value.isEmpty) {
+                //                     return 'มีช่องว่าง';
+                //                   }
+                //                   if (!(value.contains(','))) {
+                //                     return 'lat และ lng ต้องมี , คั่น ';
+                //                   } else {
+                //                     return null;
+                //                   }
+                //                 },
+                //                 decoration: InputDecoration(
+                //                     errorStyle: TextStyle(
+                //                         color: Colors.amber, fontSize: 14),
+                //                     filled: true,
+                //                     border: InputBorder.none),
+                //               ),
+                //             ),
+                //             firstButton: WidgetTextButton(
+                //               label: 'แก้ไข',
+                //               pressFunc: () {
+                //                 if (keyForm.currentState.validate()) {
+                //                   List<String> string =
+                //                       textEditingController.text.split(',');
+
+                //                   try {
+                //                     double lat = double.parse(string[0].trim());
+                //                     double lng = double.parse(string[0].trim());
+
+                //                     Get.back();
+                //                   } catch (e) {
+                //                     Get.snackbar(
+                //                         'Eror', 'อักษรไม่สามารถทำเป็นจำนวนได้',
+                //                         backgroundColor: Colors.red.shade700,
+                //                         colorText: Colors.white);
+                //                   }
+                //                 }
+                //               },
+                //             ));
+                //       },
+                //     )
+                //   ],
+                // ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -762,61 +796,59 @@ class _MapdmsxState extends State<Mapdmsx> {
                       child: Text('นำทาง'),
                     ),
                     ElevatedButton(
-                      onPressed: 
-                      
-                      () async {
+                      onPressed: () async {
                         var permissionStorage = await Permission.storage.status;
 
-                        if (permissionStorage.isDenied) {
-                          print('##18aug permisionSrot');
+                        // if (permissionStorage.isDenied) {
+                        //   print('##18aug permisionSrot');
 
-                          MyDialog(context: context).normalDialot(
-                              title: 'พื้นที่จัดเก็บปิดใช้งานอยู่',
-                              subTitle: 'กรุณาอนุญาติแอพ',
-                              firstButton: WidgetTextButton(
-                                label: 'ไปอนุญาตแอพ',
-                                pressFunc: () async {
-                                  navigator.pop();
-                                  // openAppSettings();
+                        //   MyDialog(context: context).normalDialot(
+                        //       title: 'พื้นที่จัดเก็บปิดใช้งานอยู่',
+                        //       subTitle: 'กรุณาอนุญาติแอพ',
+                        //       firstButton: WidgetTextButton(
+                        //         label: 'ไปอนุญาตแอพ',
+                        //         pressFunc: () async {
+                        //           navigator.pop();
+                        //           // openAppSettings();
 
-                                  await Permission.storage.request();
+                        //           await Permission.storage.request();
 
-                                },
-                              ));
-                        } else {
-                          double latDou =
-                              double.parse(dmsxModels[indexDirection].lat);
-                          double lngDou =
-                              double.parse(dmsxModels[indexDirection].lng);
+                        //         },
+                        //       ));
+                        // } else {
+                        double latDou =
+                            double.parse(dmsxModels[indexDirection].lat);
+                        double lngDou =
+                            double.parse(dmsxModels[indexDirection].lng);
 
-                          if (appController.positions.isNotEmpty) {
-                            Position position = appController.positions.last;
+                        if (appController.positions.isNotEmpty) {
+                          Position position = appController.positions.last;
 
-                            print(
-                                '##18aug You Click Her latDou = $latDou lngDou = $lngDou');
+                          print(
+                              '##18aug You Click Her latDou = $latDou lngDou = $lngDou');
 
-                            print('##18aug posion= $position');
+                          print('##18aug posion= $position');
 
-                            double distance = AppService().calculateDistance(
-                                position.latitude,
-                                position.longitude,
-                                latDou,
-                                lngDou);
+                          double distance = AppService().calculateDistance(
+                              position.latitude,
+                              position.longitude,
+                              latDou,
+                              lngDou);
 
-                            print('##18aug distance= $distance');
+                          print('##18aug distance= $distance');
 
-                            NumberFormat numberFormat =
-                                NumberFormat('##0.0#', 'en_US');
+                          NumberFormat numberFormat =
+                              NumberFormat('##0.0#', 'en_US');
 
-                            String distanceStr = numberFormat.format(distance);
+                          String distanceStr = numberFormat.format(distance);
 
-                            processTakePhoto(
-                                dmsxmodel: dmsxModels[indexDirection],
-                                source: ImageSource.gallery,
-                                distance: distanceStr,
-                                position: position);
-                          }
+                          processTakePhoto(
+                              dmsxmodel: dmsxModels[indexDirection],
+                              source: ImageSource.gallery,
+                              distance: distanceStr,
+                              position: position);
                         }
+                        // }
                       },
                       child: ShowText(text: 'เลือกรูป'),
                     ),
@@ -860,7 +892,7 @@ class _MapdmsxState extends State<Mapdmsx> {
                                           File file = File(result.path);
 
                                           String urlUpload =
-                                              'https://pea23.com/apipsinsx/saveFileBeforDmsx.php';
+                                              'https://www.pea23.com/apipsinsx/saveFileBeforDmsx.php';
                                           String nameFile =
                                               '${dmsxModels[indexDirection].ca}_${dmsxModels[indexDirection].dataStatus}.jpg';
                                           Map<String, dynamic> map = {};
@@ -874,11 +906,11 @@ class _MapdmsxState extends State<Mapdmsx> {
                                               .post(urlUpload, data: formData)
                                               .then((value) async {
                                             String urlImage =
-                                                'https://pea23.com/apipsinsx/uploadBeforDmsx/$nameFile';
+                                                'https://www.pea23.com/apipsinsx/uploadBeforDmsx/$nameFile';
                                             print('##29jan --> $urlImage');
 
                                             String urlInsert =
-                                                'https://pea23.com/apipsinsx/insertDataBeforDmsx.php?isAdd=true&ca=${dmsxModels[indexDirection].ca}&pea_on=${dmsxModels[indexDirection].peaNo}&image_name=$urlImage&user_id=${dmsxModels[indexDirection].userId}';
+                                                'https://www.pea23.com/apipsinsx/insertDataBeforDmsx.php?isAdd=true&ca=${dmsxModels[indexDirection].ca}&pea_on=${dmsxModels[indexDirection].peaNo}&image_name=$urlImage&user_id=${dmsxModels[indexDirection].userId}';
                                             await dio.Dio()
                                                 .get(urlInsert)
                                                 .then((value) {
@@ -909,7 +941,7 @@ class _MapdmsxState extends State<Mapdmsx> {
   Future<void> resultDialog(String result,
       {@required int indexDirection}) async {
     String path =
-        'https://pea23.com/apipsinsx/getSecurityWhereSerialNo.php?isAdd=true&serial_no=$result';
+        'https://www.pea23.com/apipsinsx/getSecurityWhereSerialNo.php?isAdd=true&serial_no=$result';
 
     var response = await Dio().get(path);
     if (response.toString() == 'null') {
@@ -952,7 +984,7 @@ class _MapdmsxState extends State<Mapdmsx> {
                 model = SecurityModel.fromMap(map);
 
                 String urlApi =
-                    'https://pea23.com/apipsinsx/editSecurityWhereSerialNo.php?isAdd=true&serial_no=${model.serial_no}&notice=${model.notice}&ca=${model.ca}&pea_no=${model.pea_no}&user_id=${model.user_id}';
+                    'https://www.pea23.com/apipsinsx/editSecurityWhereSerialNo.php?isAdd=true&serial_no=${model.serial_no}&notice=${model.notice}&ca=${model.ca}&pea_no=${model.pea_no}&user_id=${model.user_id}';
                 await Dio().get(urlApi).then((value) {
                   Fluttertoast.showToast(msg: 'อัพเดทสำเร็จ');
                   Navigator.pop(context);
@@ -998,9 +1030,9 @@ class _MapdmsxState extends State<Mapdmsx> {
                         MyDialog(context: context).processDialog();
 
                         String urlApi =
-                            'https://pea23.com/apipsinsx/saveFileBeforWmmr.php';
+                            'https://www.pea23.com/apipsinsx/saveFileBeforWmmr.php';
                         String pathImage =
-                            'https://pea23.com/apipsinsx/uploadBeforWmmr';
+                            'https://www.pea23.com/apipsinsx/uploadBeforWmmr';
 
                         await AppService()
                             .processUpload(
@@ -1013,7 +1045,7 @@ class _MapdmsxState extends State<Mapdmsx> {
                             print('###5feb urlImage -->> $urlImage');
 
                             String urlApi =
-                                'https://pea23.com/apipsinsx/insertBeforWmnr.php?isAdd=true&docId=${dmsxModels[indexDirection].docID}&ca=${dmsxModels[indexDirection].ca}&pea_on=${dmsxModels[indexDirection].peaNo}&image_name=$urlImage&image_date=${dmsxModels[indexDirection].dataStatus}&user_id=${dmsxModels[indexDirection].userId}';
+                                'https://www.pea23.com/apipsinsx/insertBeforWmnr.php?isAdd=true&docId=${dmsxModels[indexDirection].docID}&ca=${dmsxModels[indexDirection].ca}&pea_on=${dmsxModels[indexDirection].peaNo}&image_name=$urlImage&image_date=${dmsxModels[indexDirection].dataStatus}&user_id=${dmsxModels[indexDirection].userId}';
                             await dio.Dio().get(urlApi).then((value) {
                               readDataApi();
                               Navigator.pop(context);
@@ -1061,7 +1093,7 @@ class _MapdmsxState extends State<Mapdmsx> {
   }
 
   Future<Null> launchURL() async {
-    final url = 'https://pea23.com';
+    final url = 'https://www.pea23.com';
     await launch(url);
     if (await canLaunch(url)) {
       await launch(url);
@@ -1256,12 +1288,19 @@ class _MapdmsxState extends State<Mapdmsx> {
       @required String distance,
       @required Position position}) async {
     try {
-      var re = await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        allowedExtensions: ['jpg', 'jpeg', 'png', 'heic'],
-      );
+      print('##14dec processTakePhoto Work');
+      // var re = await FilePicker.platform.pickFiles(
+      //   type: FileType.custom,
+      //   allowedExtensions: ['png'],
+      //   // allowedExtensions: ['jpg', 'jpeg', 'png', 'heic'],
+      // );
 
-      File file = File(re.files.single.path);
+      // File file = File(re.files.single.path);
+
+      var result = await ImagePicker().pickImage(source: ImageSource.gallery);
+      File file = File(result.path);
+      print('###14 filePateh = ${file.path}');
+
       print('@@dmsx filePath = ${file.path}');
 
       setState(() {});
@@ -1446,12 +1485,13 @@ class _MapdmsxState extends State<Mapdmsx> {
   Future<void> processUploadAndEdit(
       File file, String nameFile, Dmsxmodel dmsxmodel,
       {@required Position position, @required String distanceStr}) async {
-    String pathUpload = 'https://pea23.com/apipsinsx/saveImageCustomer.php';
+    String pathUpload = 'https://www.pea23.com/apipsinsx/saveImageCustomer.php';
 
     Map<String, dynamic> map = {};
     map['file'] =
         await dio.MultipartFile.fromFile(file.path, filename: nameFile);
     dio.FormData data = dio.FormData.fromMap(map);
+
     await dio.Dio().post(pathUpload, data: data).then((value) async {
       print('# === value for upload ==>> $value');
       List<String> images = [];
@@ -1494,12 +1534,8 @@ class _MapdmsxState extends State<Mapdmsx> {
 
       print('@@ listStatus === $listStatus');
 
-
-
-      
-
       String apiEditImages =
-          'https://pea23.com/apipsinsx/editDmsxWhereId.php?isAdd=true&id=${dmsxmodel.id}&images=${images.toString()}&status_txt=$statusText&readNumber=$readNumber&latMobile=${position.latitude}&lngMobile=${position.longitude}&distaneMobile=$distanceStr';
+          'https://www.pea23.com/apipsinsx/editDmsxWhereId.php?isAdd=true&id=${dmsxmodel.id}&images=${images.toString()}&status_txt=$statusText&readNumber=$readNumber&latMobile=${position.latitude}&lngMobile=${position.longitude}&distaneMobile=$distanceStr';
 
       await dio.Dio().get(apiEditImages).then((value) {
         print('value update == $value');
@@ -1600,7 +1636,7 @@ class _MapdmsxState extends State<Mapdmsx> {
     print('##29jan currentDateTime $currentDateTime');
 
     String urlAPI =
-        'https://pea23.com/apipsinsx/getDmsxBeforImage.php?isAdd=true&ca=${dmsxmodel.ca}';
+        'https://www.pea23.com/apipsinsx/getDmsxBeforImage.php?isAdd=true&ca=${dmsxmodel.ca}';
     await dio.Dio().get(urlAPI).then((value) {
       if (value.toString() == 'null') {
         displayIconTakePhoto = true;

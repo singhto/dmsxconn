@@ -1,10 +1,12 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:dio/dio.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:psinsx/models/insx_model2.dart';
 import 'package:psinsx/models/user_model.dart';
 import 'package:psinsx/pages/add_information_user.dart';
@@ -63,7 +65,6 @@ class _HomePageState extends State<HomePage> {
     'งดจ่ายไฟ',
     'ประวัติ',
     'หน้าหลัก',
-    
   ];
 
   AppController appController = Get.put(AppController());
@@ -82,6 +83,38 @@ class _HomePageState extends State<HomePage> {
         });
       },
     );
+
+    //สำหรับขอ per stor
+    Future.delayed(
+      Duration.zero,
+      () {
+        requestManageExternalStoragePermission();
+      },
+    );
+  }
+
+  Future<void> requestManageExternalStoragePermission() async {
+    print('###14dec หรับขอ per stor ');
+
+    if (Platform.isAndroid) {
+      // ตรวจสอบเวอร์ชัน Android
+      if (await Permission.manageExternalStorage.isGranted) {
+        print("###14dec MANAGE_EXTERNAL_STORAGE permission already granted.");
+      } else {
+        final status = await Permission.manageExternalStorage.request();
+        if (status.isGranted) {
+          print("##14dec MANAGE_EXTERNAL_STORAGE permission granted.");
+        } else if (status.isDenied) {
+          print("##14dec Permission denied.");
+        } else if (status.isPermanentlyDenied) {
+          print(
+              "##14dec Permission permanently denied. Redirecting to settings...");
+          await openAppSettings();
+        }
+      }
+    } else {
+      print("##14dec This permission is only available for Android.");
+    }
   }
 
   void cratePages() {
@@ -90,7 +123,9 @@ class _HomePageState extends State<HomePage> {
     }
     //pages.add(online ? MyMap2() : MyMap());
     pages.add(Mapdmsx());
-    pages.add(SearchDmsx(displayBackIcon: false,));
+    pages.add(SearchDmsx(
+      displayBackIcon: false,
+    ));
     pages.add(Dashbord());
   }
 
@@ -105,7 +140,7 @@ class _HomePageState extends State<HomePage> {
     print('##26oct userId ==>>> $userId');
 
     String urlGetUserWhereId =
-        'https://pea23.com/apipsinsx/getUserWhereId.php?isAdd=true&user_id=$userId';
+        'https://www.pea23.com/apipsinsx/getUserWhereId.php?isAdd=true&user_id=$userId';
     await Dio().get(urlGetUserWhereId).then(
       (value) {
         for (var element in json.decode(value.data)) {
@@ -242,9 +277,9 @@ class _HomePageState extends State<HomePage> {
               ),
               Divider(),
               ListTile(
-                title: Text('Version 1.0.3'),
+                title: Text('Version อัพเดทล่าสุด'),
                 subtitle: Text(
-                  'อัพเดทเมื่อ 18 สิงหาคม  2567',
+                  'อัพเดทเมื่อ 14 ธันวาคม  2567',
                   style: TextStyle(fontSize: 10),
                 ),
               ),
