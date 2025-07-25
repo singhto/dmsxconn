@@ -104,7 +104,7 @@ class _DmsxPageState extends State<DmsxPage> {
     return status
         ? showListDmsx()
         : Center(
-            child: Text('ไม่มีข้อมูล'),
+            child: Text('ไม่พบข้อมูล'),
           );
   }
 
