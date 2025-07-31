@@ -3,15 +3,15 @@
     package="pea23.com.dmsxconn">
 
      <!-- เพิ่ม queries ที่นี่ -->
-    <queries>
+    <!-- <queries>
         <intent>
             <action android:name="android.intent.action.MANAGE_APP_ALL_FILES_ACCESS_PERMISSION" />
         </intent>
-    </queries>
+    </queries> -->
 
     <uses-permission android:name="android.permission.CAMERA" />
 
-    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+    <!-- <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" /> -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 

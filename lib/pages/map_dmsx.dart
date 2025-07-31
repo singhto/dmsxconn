@@ -35,7 +35,7 @@ import 'package:psinsx/widgets/show_text.dart';
 import 'package:psinsx/widgets/widget_icon_button.dart';
 import 'package:psinsx/widgets/widget_text_button.dart';
 import 'package:psinsx/widgets/widget_text_rich.dart';
-import 'package:qrscan/qrscan.dart';
+// import 'package:qrscan/qrscan.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Mapdmsx extends StatefulWidget {
@@ -204,7 +204,7 @@ class _MapdmsxState extends State<Mapdmsx> {
           dmsxModels.clear();
         }
         String path =
-            'https://www.dissrecs.com/apipsinsx/getDmsxWherUser.php?isAdd=true&user_id=$value';
+            'https://www.dissrecs.com/apipsinsx/getDmsxWherUser2.php?isAdd=true&user_id=$value';
 
         print('###1feb path ==>>> $path');
 
@@ -351,17 +351,23 @@ class _MapdmsxState extends State<Mapdmsx> {
         });
   }
 
-  Stack showDataMap({required AppController appController}) {
-    return Stack(
-      children: [
-        buildMap(),
-        buildMoney(),
-        buildControl(),
-        buildControlGreen(),
-        buildControlPubple(),
-        buildSearchButton(),
-        showDirction ? buildDirction(appController: appController) : SizedBox(),
-      ],
+  Widget showDataMap({required AppController appController}) {
+    return LayoutBuilder(
+      builder: (context, BoxConstraints constranis) {
+        return SizedBox(width: constranis.maxWidth, height: constranis.maxHeight,
+          child: Stack(fit: StackFit.expand,
+            children: [
+              buildMap(),
+              buildMoney(),
+              buildControl(),
+              buildControlGreen(),
+              buildControlPubple(),
+              buildSearchButton(),
+              showDirction ? buildDirction(appController: appController) : SizedBox(),
+            ],
+          ),
+        );
+      }
     );
   }
 
@@ -645,13 +651,13 @@ class _MapdmsxState extends State<Mapdmsx> {
                                       });
                                     } else {
                                       //ok
-                                      var result = await scan();
-                                      if (reactive != null) {
-                                        print('result --> $result');
+                                      // var result = await scan();
+                                      // if (reactive != null) {
+                                      //   print('result --> $result');
 
-                                        resultDialog(result!,
-                                            indexDirection: indexDirection!);
-                                      }
+                                      //   resultDialog(result!,
+                                      //       indexDirection: indexDirection!);
+                                      // }
                                     }
                                   });
                                 } catch (e) {
@@ -1168,7 +1174,7 @@ class _MapdmsxState extends State<Mapdmsx> {
     });
   }
 
-  GoogleMap buildMap() {
+  Widget buildMap() {
     return GoogleMap(
       mapType: MapType.normal,
       initialCameraPosition: _kGooglePlex,

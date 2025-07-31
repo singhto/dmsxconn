@@ -53,7 +53,7 @@ dependencies:
   get: ^4.6.5
   camera: ^0.11.2
   path: ^1.8.2
-  qrscan: ^0.3.3
+  # qrscan: ^0.3.3
   permission_handler: ^12.0.1
   upgrader: ^11.4.0
 
