@@ -18,7 +18,7 @@ import 'package:psinsx/utility/normal_dialog.dart';
 import 'package:psinsx/utility/sqlite_helper.dart';
 
 class InsxPageOld extends StatefulWidget {
-  InsxPageOld({Key key}) : super(key: key);
+  InsxPageOld({Key? key}) : super(key: key);
 
   @override
   _InsxPageOldState createState() => _InsxPageOldState();
@@ -27,12 +27,12 @@ class InsxPageOld extends StatefulWidget {
 class _InsxPageOldState extends State<InsxPageOld> {
   bool loadStatus = true; //โหลด
   bool status = true; //มีข้อมูล
-  List<InsxModel> insxModels = List();
+  List<InsxModel> insxModels = [];
   List<InsxSQLiteModel> insxModel2s = [];
   List<InsxSQLiteModel> filterInsxModel2s = [];
-  List<Color> colorIcons = List();
-  List<File> files = List();
-  String urlImage, search;
+  List<Color> colorIcons = [];
+  List<File?> files = [];
+  String? urlImage, search;
   final debouncer = Debouncer(milliseconds: 500);
 
   @override
@@ -60,7 +60,7 @@ class _InsxPageOldState extends State<InsxPageOld> {
         loadStatus = false;
       });
 
-      if (value.length != 0) {
+      if (value!.length != 0) {
         var result = value;
 
         for (var model in result) {
@@ -68,7 +68,7 @@ class _InsxPageOldState extends State<InsxPageOld> {
             InsxSQLiteModel insxModel2 = model;
             setState(() {
               insxModel2s.add(insxModel2);
-              colorIcons.add(calculageHues(insxModel2.noti_date));
+              colorIcons.add(calculageHues(insxModel2.noti_date!));
               files.add(null);
               filterInsxModel2s = insxModel2s;
             });
@@ -104,7 +104,7 @@ class _InsxPageOldState extends State<InsxPageOld> {
             child: Center(
               child: Text(
                 'ไม่พบข้อมูล',
-                style: TextTheme().bodyText1,
+                style: TextTheme().bodyMedium,
               ),
             ),
           );
@@ -148,8 +148,8 @@ class _InsxPageOldState extends State<InsxPageOld> {
             size: 36,
             color: color,
           ),
-          title: Text(insxModel2.cus_name),
-          subtitle: Text(insxModel2.pea_no),
+          title: Text(insxModel2.cus_name!),
+          subtitle: Text(insxModel2.pea_no!),
         ),
         children: [
           Row(
@@ -220,7 +220,7 @@ class _InsxPageOldState extends State<InsxPageOld> {
                         color: colorIcons[index],
                       ),
                       title: Text(
-                        filterInsxModel2s[index].cus_name,
+                        filterInsxModel2s[index].cus_name!,
                         style: TextStyle(
                           fontSize: 12,
                           //fontWeight: FontWeight.bold,
@@ -253,7 +253,7 @@ class _InsxPageOldState extends State<InsxPageOld> {
                 debouncer.run(() {
                   setState(() {
                     filterInsxModel2s = insxModel2s
-                        .where((u) => u.cus_name
+                        .where((u) => u.cus_name!
                             .toLowerCase()
                             .contains(value.toLowerCase()))
                         .toList();
@@ -275,14 +275,14 @@ class _InsxPageOldState extends State<InsxPageOld> {
 
   Future<Null> chooseCamera(int index) async {
     try {
-      var object = await ImagePicker().getImage(
+      var object = await ImagePicker().pickImage(
         source: ImageSource.camera,
         maxWidth: 800.0,
         maxHeight: 800.0,
       );
       setState(() {
-        files[index] = File(object.path);
-        uploadImage(files[index], index);
+        files[index] = File(object!.path);
+        uploadImage(files[index]!, index);
       });
     } catch (e) {}
   }
@@ -300,7 +300,7 @@ class _InsxPageOldState extends State<InsxPageOld> {
       FormData data = FormData.fromMap(map);
       await Dio().post(apiSaveFile, data: data).then((value) {
         //print('====>>> $value');
-        //print('Success url Image ==>> https://pea23.com/apipsinsx/upload/$fileName');
+        //print('Success url Image ==>> https://dissrecs.com/apipsinsx/upload/$fileName');
         urlImage = '${MyConstant().domain}/apipsinsx/upload/$fileName';
         print('=== usrlImage == $urlImage');
 
@@ -327,16 +327,16 @@ class _InsxPageOldState extends State<InsxPageOld> {
 }
 
 class Debouncer {
-  final int milliseconds;
-  VoidCallback action;
-  Timer _timer;
+  final  int? milliseconds;
+  VoidCallback? action;
+  Timer? _timer;
 
   Debouncer({this.milliseconds});
 
   run(VoidCallback action) {
     if (null != _timer) {
-      _timer.cancel();
+      _timer!.cancel();
     }
-    _timer = Timer(Duration(milliseconds: milliseconds), action);
+    _timer = Timer(Duration(milliseconds: milliseconds!), action);
   }
 }

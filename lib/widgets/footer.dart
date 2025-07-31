@@ -24,7 +24,7 @@ class _FooterState extends State<Footer> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text('$companyName', style: Theme.of(context).textTheme.headline5,),
+        Text('$companyName', style: Theme.of(context).textTheme.headlineMedium,),
         ElevatedButton(
           onPressed: changeCompanyName,
           child: Text('click Me'),

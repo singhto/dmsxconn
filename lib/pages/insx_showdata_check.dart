@@ -6,9 +6,9 @@ import 'package:psinsx/models/insx_check_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class InsxShowDataCheck extends StatefulWidget {
-  final InsxCheckModel insxCheckModels;
-  final bool fromMap;
-  InsxShowDataCheck({Key key, this.insxCheckModels, this.fromMap})
+  final InsxCheckModel? insxCheckModels;
+  final bool? fromMap;
+  InsxShowDataCheck({Key? key, this.insxCheckModels, this.fromMap})
       : super(key: key);
 
   @override
@@ -16,15 +16,16 @@ class InsxShowDataCheck extends StatefulWidget {
 }
 
 class _InsxShowDataCheckState extends State<InsxShowDataCheck> {
-  InsxCheckModel insxCheckModels;
-  File file;
-  String urlImage;
+  InsxCheckModel? insxCheckModels;
+  File? file;
+  String? urlImage;
   Location location = Location();
-  double lat, lng;
-  bool fromMap;
+  double? lat, lng;
+  bool? fromMap;
 
   @override
   void initState() {
+    super.initState();
     insxCheckModels = widget.insxCheckModels;
     fromMap = widget.fromMap;
   }
@@ -60,7 +61,7 @@ class _InsxShowDataCheckState extends State<InsxShowDataCheck> {
   Widget imgDate() => GestureDetector(
         onTap: () async {
           print('click click:::');
-          String url = insxCheckModels.ptcInsx;
+          String url = insxCheckModels!.ptcInsx!;
           if (await canLaunch(url)) {
             await launch(url);
           } else {
@@ -82,7 +83,7 @@ class _InsxShowDataCheckState extends State<InsxShowDataCheck> {
             Expanded(
               child: Container(
                 child: Text(
-                  '${insxCheckModels.imgDate}',
+                  '${insxCheckModels!.imgDate}',
                   style: TextStyle(
                     fontSize: 14,
                   ),
@@ -96,7 +97,7 @@ class _InsxShowDataCheckState extends State<InsxShowDataCheck> {
   Widget showLocation() => GestureDetector(
         onTap: () async {
           print('click click:::');
-          String url = insxCheckModels.ptcInsx;
+          String url = insxCheckModels!.ptcInsx!;
           if (await canLaunch(url)) {
             await launch(url);
           } else {
@@ -118,7 +119,7 @@ class _InsxShowDataCheckState extends State<InsxShowDataCheck> {
             Expanded(
               child: Container(
                 child: Text(
-                  '${insxCheckModels.ptcInsx}',
+                  '${insxCheckModels!.ptcInsx}',
                   style: TextStyle(
                     fontSize: 14,
                   ),
@@ -146,7 +147,7 @@ class _InsxShowDataCheckState extends State<InsxShowDataCheck> {
             child: Container(
               margin: EdgeInsets.only(top: 14),
               child: Text(
-                '${insxCheckModels.cusName}',
+                '${insxCheckModels!.cusName}',
                 style: TextStyle(fontSize: 14),
               ),
             ),
@@ -169,7 +170,7 @@ class _InsxShowDataCheckState extends State<InsxShowDataCheck> {
           Container(
             margin: EdgeInsets.all(8),
             child: Text(
-              '${insxCheckModels.ca}',
+              '${insxCheckModels!.ca}',
               style: TextStyle(fontSize: 14),
             ),
           ),
@@ -191,7 +192,7 @@ class _InsxShowDataCheckState extends State<InsxShowDataCheck> {
           Container(
             margin: EdgeInsets.all(8),
             child: Text(
-              '${insxCheckModels.peaNo}',
+              '${insxCheckModels!.peaNo}',
               style: TextStyle(fontSize: 14),
             ),
           ),
@@ -213,7 +214,7 @@ class _InsxShowDataCheckState extends State<InsxShowDataCheck> {
           Container(
             margin: EdgeInsets.all(8),
             child: Text(
-              '${insxCheckModels.invoiceNo}',
+              '${insxCheckModels!.invoiceNo}',
               style: TextStyle(fontSize: 14),
             ),
           ),
@@ -236,7 +237,7 @@ class _InsxShowDataCheckState extends State<InsxShowDataCheck> {
             child: Container(
               margin: EdgeInsets.all(8),
               child: Text(
-                '${insxCheckModels.cusTel}',
+                '${insxCheckModels!.cusTel}',
                 style: TextStyle(fontSize: 12),
               ),
             ),
@@ -246,7 +247,7 @@ class _InsxShowDataCheckState extends State<InsxShowDataCheck> {
 
   Widget groupImage() => Container(
         child: Image.network(
-          insxCheckModels.imageInsx,
+          insxCheckModels!.imageInsx!,
           height: 250,
           fit: BoxFit.cover,
         ),

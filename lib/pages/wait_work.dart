@@ -3,7 +3,7 @@ import 'package:psinsx/utility/my_constant.dart';
 import 'package:psinsx/widgets/show_text.dart';
 
 class WaitWork extends StatefulWidget {
-  const WaitWork({Key key}) : super(key: key);
+  const WaitWork({Key? key}) : super(key: key);
 
   @override
   _WaitWorkState createState() => _WaitWorkState();

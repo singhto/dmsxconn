@@ -1,6 +1,6 @@
 class GetDatModel {
-  String getDatId;
-  String getDatList;
+  String? getDatId;
+  String? getDatList;
 
   GetDatModel({this.getDatId, this.getDatList});
 

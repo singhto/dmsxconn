@@ -25,12 +25,12 @@ class MyMap extends StatefulWidget {
 }
 
 class _MyMapState extends State<MyMap> {
-  double lat, lng;
-  LatLng startMapLatLng;
+  double? lat, lng;
+  LatLng? startMapLatLng;
   List<InsxModel2> insxModel2s = [];
 
   bool statusProcessEdit = false;
-  GoogleMapController googleMapController;
+  GoogleMapController? googleMapController;
 
   @override
   void initState() {
@@ -57,14 +57,14 @@ class _MyMapState extends State<MyMap> {
 
   bool checkSQLite2() {
     print('########### statusSQLite ######### $statusSQLite');
-    return statusSQLite;
+    return statusSQLite!;
   }
 
-  bool statusSQLite;
+  bool? statusSQLite;
 
   Future<Null> checkSQLit() async {
-    List<InsxSQLiteModel> insxSQLiteModels = await SQLiteHelper().readSQLite();
-    if (insxSQLiteModels.length == 0) {
+    List<InsxSQLiteModel>? insxSQLiteModels = await SQLiteHelper().readSQLite();
+    if (insxSQLiteModels!.length == 0) {
       // read from api
       statusSQLite = true;
       findLatLng();
@@ -87,7 +87,7 @@ class _MyMapState extends State<MyMap> {
     insxModelForEdits.clear();
 
     await SQLiteHelper().readSQLite().then((value) {
-      List<InsxSQLiteModel> insxSQLiteModels = value;
+      List<InsxSQLiteModel> insxSQLiteModels = value!;
 
       for (var model2 in insxSQLiteModels) {
         InsxModel2 insxModel2 = InsxModel2(
@@ -140,10 +140,10 @@ class _MyMapState extends State<MyMap> {
     await SQLiteHelper().deleteAllData();
 
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    String workername = preferences.getString('staffname');
+    String? workername = preferences.getString('staffname');
 
     String url =
-        'https://www.pea23.com/apipsinsx/getInsxWhereUser.php?isAdd=true&worker_name=$workername';
+        'https://www.dissrecs.com/apipsinsx/getInsxWhereUser.php?isAdd=true&worker_name=$workername';
 
     await Dio().get(url).then((value) async {
       if (value.toString() != 'null') {
@@ -194,7 +194,7 @@ class _MyMapState extends State<MyMap> {
 
     Marker userMarker = Marker(
         markerId: MarkerId('idUser'),
-        position: LatLng(lat, lng),
+        position: LatLng(lat!, lng!),
         infoWindow: InfoWindow(title: 'คุณอยู่ที่นี่'),
         icon: BitmapDescriptor.defaultMarkerWithHue(300));
 
@@ -203,9 +203,9 @@ class _MyMapState extends State<MyMap> {
     for (var item in insxModel2s) {
       Marker marker = Marker(
         icon: BitmapDescriptor.defaultMarkerWithHue(
-            calculageHues(item.noti_date)),
+            calculageHues(item.noti_date!)),
         markerId: MarkerId('id${item.id}'),
-        position: LatLng(double.parse(item.lat), double.parse(item.lng)),
+        position: LatLng(double.parse(item.lat!), double.parse(item.lng!)),
         infoWindow: InfoWindow(
           title: item.cus_name,
           snippet: '${item.write_id} PEA:${item.pea_no}',
@@ -294,9 +294,9 @@ class _MyMapState extends State<MyMap> {
             // find Lat, lng
             var position = await findPosition();
             setState(() {
-              lat = position.latitude;
+              lat = position!.latitude;
               lng = position.longitude;
-              startMapLatLng = LatLng(lat, lng);
+              startMapLatLng = LatLng(lat!, lng!);
               if (checkSQLite2()) {
                 myReadAPI();
               } else {
@@ -309,9 +309,9 @@ class _MyMapState extends State<MyMap> {
         // find Lat, lng
         var position = await findPosition();
         setState(() {
-          lat = position.latitude;
+          lat = position!.latitude;
           lng = position.longitude;
-          startMapLatLng = LatLng(lat, lng);
+          startMapLatLng = LatLng(lat!, lng!);
           if (checkSQLite2()) {
             myReadAPI();
           } else {
@@ -334,7 +334,7 @@ class _MyMapState extends State<MyMap> {
     }
   }
 
-  Future<Position> findPosition() async {
+  Future<Position?> findPosition() async {
     Position position;
     try {
       position = await Geolocator.getCurrentPosition();
@@ -398,7 +398,7 @@ class _MyMapState extends State<MyMap> {
 
   Future<Null> editDataInsx2(InsxModel2 insxModel2) async {
     double distanceDou = MyProcess().calculateDistance(
-        lat, lng, double.parse(insxModel2.lat), double.parse(insxModel2.lng));
+        lat!, lng!, double.parse(insxModel2.lat!), double.parse(insxModel2.lng!));
     NumberFormat numberFormat = NumberFormat('#0.00', 'en_US');
     String distanceStr = numberFormat.format(distanceDou);
 
@@ -416,7 +416,7 @@ class _MyMapState extends State<MyMap> {
     });
 
     // String url =
-    //     'https://www.pea23.com/apipsinsx/editDataWhereInvoiceNo.php?isAdd=true&invoice_no=${insxModel2.invoice_no}';
+    //     'https://www.dissrecs.com/apipsinsx/editDataWhereInvoiceNo.php?isAdd=true&invoice_no=${insxModel2.invoice_no}';
 
     // print('==== url edittttt>>>> $url');
 
@@ -438,13 +438,13 @@ class _MyMapState extends State<MyMap> {
       onTap: () =>
           Navigator.pushNamed(context, '/insxPage').then((value) async {
         if (value != null) {
-          InsxSQLiteModel insxSQLiteModel = value;
+          InsxSQLiteModel insxSQLiteModel = value as InsxSQLiteModel;
           print(
               '##8jun การกลับมาจาก insx page ==:::: ${insxSQLiteModel.cus_name}');
           await readSQLiteData().then((value) {
-            LatLng latLng = LatLng(double.parse(insxSQLiteModel.lat),
-                double.parse(insxSQLiteModel.lng));
-            googleMapController.animateCamera(
+            LatLng latLng = LatLng(double.parse(insxSQLiteModel.lat!),
+                double.parse(insxSQLiteModel.lng!));
+            googleMapController!.animateCamera(
               CameraUpdate.newCameraPosition(
                 CameraPosition(target: latLng, zoom: 22),
               ),
@@ -597,7 +597,7 @@ class _MyMapState extends State<MyMap> {
   GoogleMap buildMainMap() {
     return GoogleMap(
       initialCameraPosition: CameraPosition(
-        target: startMapLatLng,
+        target: startMapLatLng!,
         zoom: 8,
       ),
       onMapCreated: (controller) {
@@ -612,7 +612,7 @@ class _MyMapState extends State<MyMap> {
   GoogleMap buildSecondMap() {
     return GoogleMap(
       initialCameraPosition: CameraPosition(
-        target: startMapLatLng,
+        target: startMapLatLng!,
         zoom: 8,
       ),
       onMapCreated: (controller) {},

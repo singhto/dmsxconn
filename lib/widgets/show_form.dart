@@ -3,15 +3,15 @@ import 'package:flutter/material.dart';
 class ShowForm extends StatelessWidget {
   final String label;
   final IconData iconData;
-  final TextInputType textInputType;
-  final String Function(String) funcValidate;
-  final Function(String) funcSave;
+  final TextInputType? textInputType;
+  final String? Function(String?)? funcValidate;
+  final Function(String?)? funcSave;
   const ShowForm(
-      {Key key,
-      @required this.label,
-      @required this.iconData,
-      @required this.funcValidate,
-      @required this.funcSave,
+      {Key? key,
+      required this.label,
+      required this.iconData,
+      required this.funcValidate,
+      required this.funcSave,
       this.textInputType})
       : super(key: key);
 

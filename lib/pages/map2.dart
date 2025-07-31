@@ -22,18 +22,18 @@ class MyMap2 extends StatefulWidget {
 }
 
 class _MyMap2State extends State<MyMap2> {
-  double lat, lng;
-  LatLng startMapLatLng;
+  double? lat, lng;
+  LatLng? startMapLatLng;
   List<InsxModel2> insxModel2s = [];
   List<InsxModel2> insxModelForEdits = [];
 
   bool statusProcessEdit = false;
 
-  GoogleMapController mapController;
+  GoogleMapController? mapController;
 
   int greenInt = 0, yellowInt = 0, blueInt = 0, redInt = 0;
 
-  LatLng latLngGreen, latLngYellow, latLngBlue, latLngRed;
+  LatLng? latLngGreen, latLngYellow, latLngBlue, latLngRed;
 
   @override
   void initState() {
@@ -52,10 +52,10 @@ class _MyMap2State extends State<MyMap2> {
     }
 
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    String workername = preferences.getString('staffname');
+    String? workername = preferences.getString('staffname');
 
     String url =
-        'https://www.pea23.com/apipsinsx/getInsxWhereUser.php?isAdd=true&worker_name=$workername';
+        'https://www.dissrecs.com/apipsinsx/getInsxWhereUser.php?isAdd=true&worker_name=$workername';
 
     await Dio().get(url).then((value) async {
       if (value.toString() != 'null') {
@@ -76,16 +76,16 @@ class _MyMap2State extends State<MyMap2> {
 
     Marker userMarker = Marker(
         markerId: MarkerId('idUser'),
-        position: LatLng(lat, lng),
+        position: LatLng(lat!, lng!),
         infoWindow: InfoWindow(title: 'คุณอยู่ที่นี่'),
         icon: BitmapDescriptor.defaultMarkerWithHue(300));
 
     for (var item in insxModel2s) {
       Marker marker = Marker(
         icon: BitmapDescriptor.defaultMarkerWithHue(
-            calculageHues(item.noti_date, item)),
+            calculageHues(item.noti_date!, item)),
         markerId: MarkerId('id${item.id}'),
-        position: LatLng(double.parse(item.lat), double.parse(item.lng)),
+        position: LatLng(double.parse(item.lat!), double.parse(item.lng!)),
         infoWindow: InfoWindow(
           title: item.cus_name,
           snippet: '${item.write_id} PEA:${item.pea_no}',
@@ -128,22 +128,22 @@ class _MyMap2State extends State<MyMap2> {
       result = hues[3]; //red 20
       redInt++;
       latLngRed =
-          LatLng(double.parse(insxModel2.lat), double.parse(insxModel2.lng));
+          LatLng(double.parse(insxModel2.lat!), double.parse(insxModel2.lng!));
     } else if (diferDate >= 3) {
       result = hues[2]; //blue 150
       blueInt++;
       latLngBlue =
-          LatLng(double.parse(insxModel2.lat), double.parse(insxModel2.lng));
+          LatLng(double.parse(insxModel2.lat!), double.parse(insxModel2.lng!));
     } else if (diferDate >= 1) {
       result = hues[1]; // yellow 60
       yellowInt++;
       latLngYellow =
-          LatLng(double.parse(insxModel2.lat), double.parse(insxModel2.lng));
+          LatLng(double.parse(insxModel2.lat!), double.parse(insxModel2.lng!));
     } else {
       greenInt++;
       result = hues[0];
       latLngGreen =
-          LatLng(double.parse(insxModel2.lat), double.parse(insxModel2.lng));
+          LatLng(double.parse(insxModel2.lat!), double.parse(insxModel2.lng!));
     }
     return result;
   }
@@ -174,9 +174,9 @@ class _MyMap2State extends State<MyMap2> {
             // find Lat, lng
             var position = await findPosition();
             setState(() {
-              lat = position.latitude;
+              lat = position!.latitude;
               lng = position.longitude;
-              startMapLatLng = LatLng(lat, lng);
+              startMapLatLng = LatLng(lat!, lng!);
               myReadAPI();
             });
           }
@@ -185,9 +185,9 @@ class _MyMap2State extends State<MyMap2> {
         // find Lat, lng
         var position = await findPosition();
         setState(() {
-          lat = position.latitude;
+          lat = position!.latitude;
           lng = position.longitude;
-          startMapLatLng = LatLng(lat, lng);
+          startMapLatLng = LatLng(lat!, lng!);
           myReadAPI();
         });
       }
@@ -202,7 +202,7 @@ class _MyMap2State extends State<MyMap2> {
     }
   }
 
-  Future<Position> findPosition() async {
+  Future<Position?> findPosition() async {
     Position position;
     try {
       position = await Geolocator.getCurrentPosition();
@@ -223,7 +223,7 @@ class _MyMap2State extends State<MyMap2> {
 
   Future<Null> editDataInsx2(InsxModel2 insxModel2) async {
     String url =
-        'https://www.pea23.com/apipsinsx/editDataWhereInvoiceNo.php?isAdd=true&invoice_no=${insxModel2.invoice_no}';
+        'https://www.dissrecs.com/apipsinsx/editDataWhereInvoiceNo.php?isAdd=true&invoice_no=${insxModel2.invoice_no}';
 
     await Dio().get(url).then((value) {
       if (value.toString() == 'true') {
@@ -236,7 +236,7 @@ class _MyMap2State extends State<MyMap2> {
   Widget pinGreen() {
     return GestureDetector(
       onTap: () {
-        return Navigator.push(
+        Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => InsxPage(
@@ -247,10 +247,10 @@ class _MyMap2State extends State<MyMap2> {
           print('##4june การกลับจาก insxPage ${insxModel2.cus_name} ');
 
           LatLng latLng = LatLng(
-            double.parse(insxModel2.lat),
-            double.parse(insxModel2.lng),
+            double.parse(insxModel2.lat!),
+            double.parse(insxModel2.lng!),
           );
-          mapController.animateCamera(CameraUpdate.newCameraPosition(
+          mapController!.animateCamera(CameraUpdate.newCameraPosition(
               CameraPosition(target: latLng, zoom: 22)));
           myReadAPI();
         });
@@ -294,8 +294,8 @@ class _MyMap2State extends State<MyMap2> {
               top: 80,
               left: 6,
               tapFunc: () {
-                mapController.animateCamera(CameraUpdate.newCameraPosition(
-                    CameraPosition(target: latLngGreen, zoom: 16)));
+                mapController!.animateCamera(CameraUpdate.newCameraPosition(
+                    CameraPosition(target: latLngGreen!, zoom: 16)));
               },
               iconData: Icons.pin_drop,
               label: '$greenInt',
@@ -304,8 +304,8 @@ class _MyMap2State extends State<MyMap2> {
               top: 152,
               left: 6,
               tapFunc: () {
-                mapController.animateCamera(CameraUpdate.newCameraPosition(
-                    CameraPosition(target: latLngYellow, zoom: 16)));
+                mapController!.animateCamera(CameraUpdate.newCameraPosition(
+                    CameraPosition(target: latLngYellow!, zoom: 16)));
               },
               iconData: Icons.pin_drop,
               label: '$yellowInt',
@@ -314,8 +314,8 @@ class _MyMap2State extends State<MyMap2> {
               top: 224,
               left: 6,
               tapFunc: () {
-                mapController.animateCamera(CameraUpdate.newCameraPosition(
-                    CameraPosition(target: latLngBlue, zoom: 16)));
+                mapController!.animateCamera(CameraUpdate.newCameraPosition(
+                    CameraPosition(target: latLngBlue!, zoom: 16)));
               },
               iconData: Icons.pin_drop,
               label: '$blueInt',
@@ -324,8 +324,8 @@ class _MyMap2State extends State<MyMap2> {
               top: 296,
               left: 6,
               tapFunc: () {
-                mapController.animateCamera(CameraUpdate.newCameraPosition(
-                    CameraPosition(target: latLngRed, zoom: 16)));
+                mapController!.animateCamera(CameraUpdate.newCameraPosition(
+                    CameraPosition(target: latLngRed!, zoom: 16)));
               },
               iconData: Icons.pin_drop,
               label: '$redInt',
@@ -376,12 +376,12 @@ class _MyMap2State extends State<MyMap2> {
   }
 
   Positioned newCard({
-    @required double top,
-    @required double left,
-    @required Function() tapFunc,
-    @required IconData iconData,
-    @required String label,
-    @required Color color,
+    required double top,
+    required double left,
+    required Function() tapFunc,
+    required IconData iconData,
+    required String label,
+    required Color color,
   }) {
     return Positioned(
       top: top,
@@ -434,7 +434,7 @@ class _MyMap2State extends State<MyMap2> {
   GoogleMap buildMainMap() {
     return GoogleMap(
       initialCameraPosition: CameraPosition(
-        target: startMapLatLng,
+        target: startMapLatLng!,
         zoom: 8,
       ),
       onMapCreated: (controller) {

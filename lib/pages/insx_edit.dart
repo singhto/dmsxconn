@@ -16,24 +16,24 @@ import 'package:psinsx/utility/my_process.dart';
 import 'package:psinsx/utility/normal_dialog.dart';
 
 class InsxEdit extends StatefulWidget {
-  final InsxModel2 insxModel2;
-  final bool fromMap;
-  InsxEdit({Key key, this.insxModel2, this.fromMap}) : super(key: key);
+  final InsxModel2? insxModel2;
+  final bool? fromMap;
+  InsxEdit({Key? key, this.insxModel2, this.fromMap}) : super(key: key);
 
   @override
   _InsxEditState createState() => _InsxEditState();
 }
 
 class _InsxEditState extends State<InsxEdit> {
-  InsxModel2 insxModel2;
-  File file;
-  String urlImage;
+  InsxModel2? insxModel2;
+  File? file;
+  String? urlImage;
   Location location = Location();
-  double lat, lng;
-  bool fromMap;
-  String distanceStr;
+  double? lat, lng;
+  bool? fromMap;
+  String? distanceStr;
   bool statusContinue = false; //ไม่สามารถไปต่อได้
-  double distanceDou;
+  double? distanceDou;
   String work_image = '';
 
   @override
@@ -45,15 +45,17 @@ class _InsxEditState extends State<InsxEdit> {
   }
 
   Future<Null> findLatLng() async {
-    Position position = await findPosition();
-    setState(() {
-      lat = position.latitude;
-      lng = position.longitude;
-    });
-    myCalculateDistance();
+    Position? position = await findPosition();
+    if (position != null) {
+  setState(() {
+    lat = position.latitude;
+    lng = position.longitude;
+  });
+  myCalculateDistance();
+}
   }
 
-  Future<Position> findPosition() async {
+  Future<Position?> findPosition() async {
     try {
       return await Geolocator.getCurrentPosition();
     } catch (e) {
@@ -89,7 +91,7 @@ class _InsxEditState extends State<InsxEdit> {
                       child: Stack(
                         children: [
                           Image.file(
-                            file,
+                            file!,
                             fit: BoxFit.cover,
                           ),
                           Positioned(
@@ -132,11 +134,11 @@ class _InsxEditState extends State<InsxEdit> {
   }
 
   void myCalculateDistance() {
-    double lat2Dou = double.parse(insxModel2.lat);
-    double lng2Dou = double.parse(insxModel2.lng);
+    double lat2Dou = double.parse(insxModel2!.lat!);
+    double lng2Dou = double.parse(insxModel2!.lng!);
 
     double distanceDou =
-        MyProcess().calculateDistance(lat, lng, lat2Dou, lng2Dou) * 1000;
+        MyProcess().calculateDistance(lat!, lng!, lat2Dou, lng2Dou) * 1000;
 
     NumberFormat numberFormat = NumberFormat('#0.00', 'en_US');
     distanceStr = numberFormat.format(distanceDou);
@@ -176,7 +178,7 @@ class _InsxEditState extends State<InsxEdit> {
           Container(
             margin: EdgeInsets.only(top: 14),
             child: Text(
-              '${insxModel2.lat}, ${insxModel2.lng}',
+              '${insxModel2!.lat}, ${insxModel2!.lng}',
               style: TextStyle(fontSize: 12, color: Colors.red),
             ),
           ),
@@ -200,7 +202,7 @@ class _InsxEditState extends State<InsxEdit> {
             child: Container(
               margin: EdgeInsets.only(top: 14),
               child: Text(
-                '${insxModel2.cus_name}',
+                '${insxModel2!.cus_name}',
                 style: TextStyle(fontSize: 12),
               ),
             ),
@@ -223,16 +225,16 @@ class _InsxEditState extends State<InsxEdit> {
           Container(
             margin: EdgeInsets.all(8),
             child: Text(
-              '${insxModel2.ca}',
+              '${insxModel2!.ca}',
               style: TextStyle(fontSize: 14),
             ),
           ),
           IconButton(
             icon: Icon(Icons.copy_outlined),
             onPressed: () {
-              Clipboard.setData(ClipboardData(text: "${insxModel2.ca}"));
-              Fluttertoast.showToast(msg: 'คัดลอก ${insxModel2.ca}');
-              print(insxModel2.ca);
+              Clipboard.setData(ClipboardData(text: "${insxModel2!.ca}"));
+              Fluttertoast.showToast(msg: 'คัดลอก ${insxModel2!.ca}');
+              print(insxModel2!.ca);
             },
           ),
         ],
@@ -255,17 +257,17 @@ class _InsxEditState extends State<InsxEdit> {
             child: Row(
               children: [
                 Text(
-                  '${insxModel2.pea_no}',
+                  '${insxModel2!.pea_no}',
                   style: TextStyle(fontSize: 12),
                 ),
                 IconButton(
                   icon: Icon(Icons.copy_outlined),
                   onPressed: () {
                     Clipboard.setData(
-                        ClipboardData(text: "Gis ${insxModel2.pea_no}"));
+                        ClipboardData(text: "Gis ${insxModel2!.pea_no}"));
                     Fluttertoast.showToast(
-                        msg: 'คัดลอก Gis ${insxModel2.pea_no}');
-                    print(insxModel2.pea_no);
+                        msg: 'คัดลอก Gis ${insxModel2!.pea_no}');
+                    print(insxModel2!.pea_no);
                   },
                 ),
               ],
@@ -289,7 +291,7 @@ class _InsxEditState extends State<InsxEdit> {
           Container(
             margin: EdgeInsets.all(8),
             child: Text(
-              '${insxModel2.write_id}',
+              '${insxModel2!.write_id}',
               style: TextStyle(fontSize: 12),
             ),
           ),
@@ -312,7 +314,7 @@ class _InsxEditState extends State<InsxEdit> {
             child: Container(
               margin: EdgeInsets.all(8),
               child: Text(
-                '${insxModel2.address}',
+                '${insxModel2!.address}',
                 style: TextStyle(fontSize: 12),
               ),
             ),
@@ -326,7 +328,7 @@ class _InsxEditState extends State<InsxEdit> {
       allowedExtensions: ['jpg', 'jpeg', 'png', 'heic'],
     );
 
-    File file = File(result.files.single.path);
+    File file = File(result!.files.single.path!);
 
     var strings = file.path.split('/');
     String nameImage = strings.last;
@@ -338,7 +340,7 @@ class _InsxEditState extends State<InsxEdit> {
 
     nameImage = nameImage.substring(4, 16);
 
-    String trueName = insxModel2.ca.substring(0, 12);
+    String trueName = insxModel2!.ca!.substring(0, 12);
 
     print('##4june ชื่อภาพจากเครื่อง $nameImage');
     print('##4june ชื่อภาพ ca $trueName');
@@ -356,18 +358,18 @@ class _InsxEditState extends State<InsxEdit> {
       maxWidth: 800,
       maxHeight: 800,
     );
-    file = File(result.path);
+    file = File(result!.path);
     statusContinue = true;
     setState(() {});
   }
 
   Widget groupImage() => ElevatedButton.icon(
       style: ElevatedButton.styleFrom(
-        primary: Colors.red,
+        backgroundColor: Colors.red,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
       ),
       onPressed: () {
-        if (double.parse(distanceStr) > 150) {
+        if (double.parse(distanceStr!) > 150) {
           //ถ่ายรูป
           if (!statusContinue) {
             CustomDialog().actionDialog(
@@ -469,7 +471,7 @@ class _InsxEditState extends State<InsxEdit> {
     await MyProcess()
         .editDataInsx2(
             insxModel2: insxModel2,
-            distance: distanceStr,
+            distance: distanceStr!,
             work_image: work_image)
         .then((value) {
       Navigator.pop(context);
@@ -479,22 +481,22 @@ class _InsxEditState extends State<InsxEdit> {
 
   Future<void> processChackHaveImage() async {
     if (file == null) {
-      editDataInsx(insxModel2);
+      editDataInsx(insxModel2!);
     } else {
-      String nameImage = 'image${insxModel2.id}.jpg';
+      String nameImage = 'image${insxModel2!.id}.jpg';
 
       print('##8jun nameImage = $nameImage');
 
       Map<String, dynamic> map = {};
       map['file'] =
-          await MultipartFile.fromFile(file.path, filename: nameImage);
+          await MultipartFile.fromFile(file!.path, filename: nameImage);
       FormData formData = FormData.fromMap(map);
       await Dio()
           .post(MyConstant.apiUploadToWorkImage, data: formData)
           .then((value) {
         work_image = '${MyConstant.domainUploadinsx}$nameImage';
         print('##8jun Image === $work_image');
-        editDataInsx(insxModel2);
+        editDataInsx(insxModel2!);
       });
     }
   }

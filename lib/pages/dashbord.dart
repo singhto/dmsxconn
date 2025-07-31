@@ -7,14 +7,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Dashbord extends StatefulWidget {
-  Dashbord({Key key}) : super(key: key);
+  Dashbord({Key? key}) : super(key: key);
 
   @override
   _DashbordState createState() => _DashbordState();
 }
 
 class _DashbordState extends State<Dashbord> {
-  String nameUser;
+  String? nameUser;
 
   @override
   void initState() {
@@ -30,7 +30,7 @@ class _DashbordState extends State<Dashbord> {
   }
 
   Future<Null> launchURL() async {
-    final url = 'https://www.pea23.com/index.php';
+    final url = 'https://www.dissrecs.com/index.php';
     await launch(url);
     if (await canLaunch(url)) {
       await launch(url);

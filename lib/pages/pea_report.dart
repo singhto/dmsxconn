@@ -10,7 +10,7 @@ import 'package:psinsx/utility/my_style.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PeaReport extends StatefulWidget {
-  PeaReport({Key key}) : super(key: key);
+  PeaReport({Key? key}) : super(key: key);
 
   @override
   _PeaReportState createState() => _PeaReportState();
@@ -19,11 +19,11 @@ class PeaReport extends StatefulWidget {
 class _PeaReportState extends State<PeaReport> {
   bool loadStatus = true; //โหลด
   bool status = true; //มีข้อมูล
-  List<InsxModel> insxModels = List();
+  List<InsxModel> insxModels = [];
   List<ImageInsxModel> imageInsxModels = [];
-  List<Color> colorIcons = List();
-  List<File> files = List();
-  String urlImage;
+  List<Color> colorIcons = [];
+  List<File?> files = [];
+  String? urlImage;
 
   @override
   void initState() {
@@ -45,10 +45,10 @@ class _PeaReportState extends State<PeaReport> {
       setToOrigin();
     }
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    String userId = preferences.getString('id');
+    String? userId = preferences.getString('id');
 
     String url =
-        'https://www.pea23.com/apipsinsx/getImageSuccess.php?isAdd=true&user_id=$userId';
+        'https://www.dissrecs.com/apipsinsx/getImageSuccess.php?isAdd=true&user_id=$userId';
 
 
         print('url $url');
@@ -92,7 +92,7 @@ class _PeaReportState extends State<PeaReport> {
             child: Center(
               child: Text(
                 'ไม่มีข้อมูล',
-                style: TextTheme().bodyText1,
+                style: TextTheme().bodyMedium,
               ),
             ),
           );
@@ -155,10 +155,10 @@ class _PeaReportState extends State<PeaReport> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: ListTile(
-                      leading: Image.network(imageInsxModels[index].imageInsx),
+                      leading: Image.network(imageInsxModels[index].imageInsx!),
                    
                       title: Text(
-                        imageInsxModels[index].cusName,
+                        imageInsxModels[index].cusName!,
                         style: TextStyle(
                           fontSize: 10,
                        

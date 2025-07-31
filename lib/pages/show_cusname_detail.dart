@@ -19,7 +19,7 @@ import 'package:path/path.dart' as path;
 
 class ShowCusnameDetail extends StatefulWidget {
   final Dmsxmodel dmsxmodel;
-  const ShowCusnameDetail({Key key, @required this.dmsxmodel})
+  const ShowCusnameDetail({Key? key, required this.dmsxmodel})
       : super(key: key);
 
   @override
@@ -27,11 +27,11 @@ class ShowCusnameDetail extends StatefulWidget {
 }
 
 class _ShowCusnameDetailState extends State<ShowCusnameDetail> {
-  Dmsxmodel dmsxmodel;
+  Dmsxmodel? dmsxmodel;
   Map<MarkerId, Marker> markers = {};
 
   bool checkAmountImagebol = true; //true show เลือกรูป
-  String statusText;
+  String? statusText;
   List<String> titleStatuss = [];
   List<Dmsxmodel> dmsxModels = [];
   bool showUpload = false; 
@@ -39,30 +39,30 @@ class _ShowCusnameDetailState extends State<ShowCusnameDetail> {
 
   @override
   void initState() {
-    // TODO: implement initState
+ 
     super.initState();
     buildSetUp();
   }
 
   void buildSetUp() {
     dmsxmodel = widget.dmsxmodel;
-    double hue = MyApi().calcuclatHue(dmsxmodel.statusTxt);
+    double hue = MyApi().calcuclatHue(dmsxmodel!.statusTxt!);
 
     MarkerId markerId = MarkerId('id');
     Marker marker = Marker(
       markerId: markerId,
       position: LatLng(
-        double.parse(dmsxmodel.lat.trim()),
+        double.parse(dmsxmodel!.lat!.trim()),
         double.parse(
-          dmsxmodel.lng.trim(),
+          dmsxmodel!.lng!.trim(),
         ),
       ),
       infoWindow: InfoWindow(
         onTap: () async {
 
-            processAddImage(dmsxmodel);
-          if (dmsxmodel.images.isNotEmpty) {
-            checkAmountImage(dmsxmodel.images);
+            processAddImage(dmsxmodel!);
+          if (dmsxmodel!.images!.isNotEmpty) {
+            checkAmountImage(dmsxmodel!.images!);
           }
           
           // showDialog(
@@ -76,8 +76,8 @@ class _ShowCusnameDetailState extends State<ShowCusnameDetail> {
           //   ),
           // );
         },
-        title: '${dmsxmodel.employeeId}',
-        snippet: 'PEA : ${dmsxmodel.peaNo}',
+        title: '${dmsxmodel!.employeeId}',
+        snippet: 'PEA : ${dmsxmodel!.peaNo}',
       ),
       icon: BitmapDescriptor.defaultMarkerWithHue(hue),
     );
@@ -90,7 +90,7 @@ class _ShowCusnameDetailState extends State<ShowCusnameDetail> {
     return Scaffold(
       appBar: AppBar(
         title: ShowTitle(
-          title: dmsxmodel.cusName,
+          title: dmsxmodel!.cusName!,
           textStyle: MyConstant().h4Style(),
         ),
       ),
@@ -99,9 +99,9 @@ class _ShowCusnameDetailState extends State<ShowCusnameDetail> {
         initialCameraPosition: CameraPosition(
           zoom: 16,
           target: LatLng(
-            double.parse(dmsxmodel.lat.trim()),
+            double.parse(dmsxmodel!.lat!.trim()),
             double.parse(
-              dmsxmodel.lng.trim(),
+              dmsxmodel!.lng!.trim(),
             ),
           ),
         ),
@@ -120,7 +120,7 @@ class _ShowCusnameDetailState extends State<ShowCusnameDetail> {
       builder: (context) => AlertDialog(
         title: ListTile(
           title: Text(
-            dmsxmodel.cusName,
+            dmsxmodel.cusName!,
             style: TextStyle(fontSize: 14),
           ),
         ),
@@ -148,7 +148,7 @@ class _ShowCusnameDetailState extends State<ShowCusnameDetail> {
                 'ที่อยู่ : ${dmsxmodel.address}',
                 style: TextStyle(fontSize: 12),
               ),
-              dmsxmodel.images.isEmpty ? SizedBox() : showListImages(dmsxmodel),
+              dmsxmodel.images!.isEmpty ? SizedBox() : showListImages(dmsxmodel),
             ],
           ),
         ),
@@ -200,7 +200,7 @@ class _ShowCusnameDetailState extends State<ShowCusnameDetail> {
     print('##### image ==> ${dmsxmodel.images}');
     List<Widget> widgets = [];
 
-    String string = dmsxmodel.images;
+    String string = dmsxmodel.images!;
     string = string.substring(1, string.length - 1);
     List<String> strings = string.split(',');
     print('### strings ==> $strings');
@@ -229,17 +229,17 @@ class _ShowCusnameDetailState extends State<ShowCusnameDetail> {
   }
 
    Future<void> processTakePhoto(
-      {Dmsxmodel dmsxmodel, ImageSource source}) async {
+      {required Dmsxmodel dmsxmodel,required ImageSource source}) async {
     try {
-      var result = await ImagePicker().getImage(
+      var result = await ImagePicker().pickImage(
         source: source,
         maxWidth: 500,
         maxHeight: 500,
       );
 
-      File file = File(result.path);
+      File file = File(result!.path);
 
-      switch (dmsxmodel.statusTxt.trim()) {
+      switch (dmsxmodel.statusTxt!.trim()) {
         case 'เริ่มงดจ่ายไฟ':
           titleStatuss = MyConstant.statusTextsNonJay;
           break;
@@ -347,7 +347,7 @@ class _ShowCusnameDetailState extends State<ShowCusnameDetail> {
 
         print('# nameFIle = $nameFile');
 
-        String pathUpload = 'https://www.pea23.com/apipsinsx/saveImageCustomer.php';
+        String pathUpload = 'https://www.dissrecs.com/apipsinsx/saveImageCustomer.php';
 
         Map<String, dynamic> map = {};
         map['file'] =
@@ -357,10 +357,10 @@ class _ShowCusnameDetailState extends State<ShowCusnameDetail> {
           print('# === value for upload ==>> $value');
           List<String> images = [];
 
-          if (dmsxmodel.images.isEmpty) {
+          if (dmsxmodel.images!.isEmpty) {
             images.add(nameFile);
           } else {
-            String string = dmsxmodel.images;
+            String string = dmsxmodel.images!;
             string = string.substring(1, string.length - 1);
             images = string.split(',');
             int index = 0;
@@ -373,7 +373,7 @@ class _ShowCusnameDetailState extends State<ShowCusnameDetail> {
 
           String readNumber = 'ดำเนินการแล้ว';
 
-          if (dmsxmodel.readNumber.isEmpty) {
+          if (dmsxmodel.readNumber!.isEmpty) {
             readNumber = 'ดำเนินการแล้ว';
           } else {
             readNumber = 'ต่อกลับแล้ว';
@@ -472,14 +472,14 @@ class _ShowCusnameDetailState extends State<ShowCusnameDetail> {
 
     print('## hueDouble == $hueDouble');
 
-    MarkerId markerId = MarkerId(dmsxmodel.id);
+    MarkerId markerId = MarkerId(dmsxmodel.id!);
     Marker marker = Marker(
       icon: BitmapDescriptor.defaultMarkerWithHue(hueDouble),
       infoWindow: InfoWindow(
         onTap: () {
           processAddImage(dmsxmodel);
-          if (dmsxmodel.images.isNotEmpty) {
-            checkAmountImage(dmsxmodel.images);
+          if (dmsxmodel.images!.isNotEmpty) {
+            checkAmountImage(dmsxmodel.images!);
           }
         },
         title: '${dmsxmodel.employeeId}',
@@ -488,9 +488,9 @@ class _ShowCusnameDetailState extends State<ShowCusnameDetail> {
       ),
       markerId: markerId,
       position: LatLng(
-        double.parse(dmsxmodel.lat.trim()),
+        double.parse(dmsxmodel.lat!.trim()),
         double.parse(
-          dmsxmodel.lng.trim(),
+          dmsxmodel.lng!.trim(),
         ),
       ),
     );

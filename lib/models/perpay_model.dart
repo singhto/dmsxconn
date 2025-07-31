@@ -1,11 +1,11 @@
 class PerPayModel {
-  String id;
-  String refUserId;
-  String prepayType;
-  String prepayAmount;
-  String prepayDate;
-  String prepayStatus;
-  String prepayFile;
+  String? id;
+  String? refUserId;
+  String? prepayType;
+  String? prepayAmount;
+  String? prepayDate;
+  String? prepayStatus;
+  String? prepayFile;
 
   PerPayModel(
       {this.id,

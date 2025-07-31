@@ -12,7 +12,7 @@ import 'package:psinsx/utility/my_style.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DocPage extends StatefulWidget {
-  DocPage({Key key}) : super(key: key);
+  DocPage({Key? key}) : super(key: key);
 
   @override
   _DocPageState createState() => _DocPageState();
@@ -21,12 +21,12 @@ class DocPage extends StatefulWidget {
 class _DocPageState extends State<DocPage> {
   bool loadStatus = true; //โหลด
   bool status = true; //มีข้อมูล
-  List<InsxModel> insxModels = List();
+  List<InsxModel> insxModels = [];
   List<InsxCheckModel> insxCheckModels = [];
   List<GetDatModel> getDateModels = [];
-  List<Color> colorIcons = List();
-  List<File> files = List();
-  String urlImage;
+  List<Color> colorIcons = [];
+  List<File> files = [];
+  String? urlImage;
    TextEditingController ctrReportDate = TextEditingController();
 
   @override
@@ -50,13 +50,13 @@ class _DocPageState extends State<DocPage> {
       setToOrigin();
     }
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    String userId = preferences.getString('id');
-    String stafName = preferences.getString('staffname');
+    String? userId = preferences.getString('id');
+    String? stafName = preferences.getString('staffname');
     //print('userId === $userId');
     //print('staffName === $stafName');
 
     String url =
-        'https://www.pea23.com/apipsinsx/getDocWhereUserSuccess.php?isAdd=true&user_id=$userId';
+        'https://www.dissrecs.com/apipsinsx/getDocWhereUserSuccess.php?isAdd=true&user_id=$userId';
 
     print('url ====>>> $url');
     await Dio().get(url).then((value) {
@@ -111,16 +111,16 @@ class _DocPageState extends State<DocPage> {
                 suffixIcon: IconButton(
                   icon: Icon(Icons.calendar_today),
                   onPressed: () async {
-                    DateTime selectedDate = await showDatePicker(
+                    DateTime? selectedDate = await showDatePicker(
                         context: (context),
                         initialDate: DateTime.now(),
                         firstDate: DateTime.now().subtract(Duration(days: 30)),
                         lastDate: DateTime.now(),
                         builder: (context, child) {
                           return Theme(
-                            child: child,
+                            child: child!,
                             data: ThemeData.light().copyWith(
-                                accentColor: Colors.red[600],
+                                // accentColor: Colors.red[600],
                                 colorScheme: ColorScheme.light(
                                   primary: Colors.red,
                                 ),

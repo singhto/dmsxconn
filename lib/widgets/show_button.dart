@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 class ShowButton extends StatelessWidget {
   final Function() pressFunc;
   final String label;
-  final Color colorLabel;
+  final Color? colorLabel;
   const ShowButton({
-    Key key,
-    @required this.pressFunc,
-    @required this.label,
+    Key? key,
+    required this.pressFunc,
+    required this.label,
     this.colorLabel,
   }) : super(key: key);
 

@@ -1,20 +1,20 @@
 class InsxCheckModel {
-  String idCheck;
-  String ca;
-  String peaNo;
-  String cusName;
-  String cusTel;
-  String invoiceNo;
-  String ptcInsx;
-  String notiStatus;
-  String imageInsx;
-  String imgDate;
-  String workDate;
-  int distance;
-  String userId;
-  int userIdCheck;
-  String statusCheck;
-  String importDate;
+  String? idCheck;
+  String? ca;
+  String? peaNo;
+  String? cusName;
+  String? cusTel;
+  String? invoiceNo;
+  String? ptcInsx;
+  String? notiStatus;
+  String? imageInsx;
+  String? imgDate;
+  String? workDate;
+  int? distance;
+  String? userId;
+  int? userIdCheck;
+  String? statusCheck;
+  String? importDate;
 
   InsxCheckModel(
       {this.idCheck,

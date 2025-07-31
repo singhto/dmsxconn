@@ -1,11 +1,11 @@
 class ManualModel {
-  String mId;
-  String mTopic;
-  String mDetail;
-  String mImageUrl;
-  String mLink;
-  String mCreated;
-  String mType;
+  String? mId;
+  String? mTopic;
+  String? mDetail;
+  String? mImageUrl;
+  String? mLink;
+  String? mCreated;
+  String? mType;
 
   ManualModel(
       {this.mId,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 Future<void> normalDialog(BuildContext context, String message,
-    {Widget widget}) async {
+    {Widget? widget}) async {
   showDialog(
     context: context,
     builder: (context) => SimpleDialog(

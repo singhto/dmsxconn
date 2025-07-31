@@ -1,12 +1,12 @@
 class SubModel {
-  String supplierId;
-  String supplierName;
-  String supplierAddress;
-  String supplierTaxid;
-  String orderFromId;
-  String branch;
-  String createBy;
-  String supplierDate;
+  String? supplierId;
+  String? supplierName;
+  String? supplierAddress;
+  String? supplierTaxid;
+  String? orderFromId;
+  String? branch;
+  String? createBy;
+  String? supplierDate;
 
   SubModel(
       {this.supplierId,

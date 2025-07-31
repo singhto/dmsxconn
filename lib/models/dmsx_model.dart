@@ -3,34 +3,34 @@
 import 'dart:convert';
 
 class Dmsxmodel {
-  final String id;
-  final String ca;
-  final String docID;
-  final String notice;
-  final String employeeId;
-  final String employeeName;
-  final String peaNo;
-  final String cusName;
-  final String line;
-  final String status;
-  final String statusTxt;
-  final String type;
-  final String typeTxt;
-  final String tel;
-  final String address;
-  final String invoice;
-  final String arrears;
-  final String images;
-  final String readNumber;
-  final String lat;
-  final String lng;
-  final String paymentDate;
-  final String dataStatus;
-  final String refnoti_date;
-  final String timestamp;
-  final String userId;
-  final String importDate;
-  final String image_befor_wmmr;
+  final String? id;
+  final String? ca;
+  final String? docID;
+  final String? notice;
+  final String? employeeId;
+  final String? employeeName;
+  final String? peaNo;
+  final String? cusName;
+  final String? line;
+  final String? status;
+  final String? statusTxt;
+  final String? type;
+  final String? typeTxt;
+  final String? tel;
+  final String? address;
+  final String? invoice;
+  final String? arrears;
+  final String? images;
+  final String? readNumber;
+  final String? lat;
+  final String? lng;
+  final String? paymentDate;
+  final String? dataStatus;
+  final String? refnoti_date;
+  final String? timestamp;
+  final String? userId;
+  final String? importDate;
+  final String? image_befor_wmmr;
   Dmsxmodel({
     this.id,
     this.ca,

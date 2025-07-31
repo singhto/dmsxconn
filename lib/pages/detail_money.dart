@@ -7,8 +7,8 @@ import 'package:psinsx/widgets/show_text.dart';
 class DetaliMoney extends StatefulWidget {
   final List<Dmsxmodel> dmsxModels;
   const DetaliMoney({
-    Key key,
-    @required this.dmsxModels,
+    Key? key,
+    required this.dmsxModels,
   }) : super(key: key);
 
   @override
@@ -20,7 +20,7 @@ class _DetaliMoneyState extends State<DetaliMoney> {
   var fourDigis = <String>[];
   Map<String, int> map = {};
   double totel = 0, percent = 0;
-  String percentStr, totelStr;
+  String? percentStr, totelStr;
 
   Map<String, String> mapTH = {};
 
@@ -42,12 +42,12 @@ class _DetaliMoneyState extends State<DetaliMoney> {
     var images = <String>[];
 
     for (var item in dmsxModels) {
-      String string = item.images;
+      String? string = item.images;
 
       print('##6jul string == $string');
 
-      if (string.isNotEmpty) {
-        string = string.substring(1, string.length - 1);
+      if (string?.isNotEmpty?? false) {
+        string = string!.substring(1, string.length - 1);
         if (string.contains(',')) {
           var results = string.split(',');
           for (var item in results) {
@@ -72,7 +72,7 @@ class _DetaliMoneyState extends State<DetaliMoney> {
           map[item] = 1;
           fourDigis.add(item);
         } else {
-          map[item] = map[item] + 1;
+          map[item] = map[item]! + 1;
         }
       }
     }
@@ -106,9 +106,9 @@ class _DetaliMoneyState extends State<DetaliMoney> {
     mapPrices['WMS2'] = 5;
 
     for (var item in fourDigis) {
-      print('##6jul ส่วนของ $item ===> ${map[item] * mapPrices[item]}');
+      print('##6jul ส่วนของ $item ===> ${map[item]! * mapPrices[item]!}');
 
-      totel = totel + (map[item] * mapPrices[item]);
+      totel = totel + (map[item]! * mapPrices[item]!);
     }
 
     NumberFormat numberFormatTotel = NumberFormat('##0.00', 'en_US');
@@ -118,13 +118,13 @@ class _DetaliMoneyState extends State<DetaliMoney> {
 
     if (map['WMST'] != null) {
       if (map['WMST'] != 1) {
-        map['WMST']--;
+        map['WMST']!-1;
       }
     }
 
     if (map['WMS2'] != null) {
       if (map['WMS2'] != 1) {
-        map['WMS2']--;
+        map['WMS2']!-1;
       }
     }
 
@@ -188,7 +188,7 @@ class _DetaliMoneyState extends State<DetaliMoney> {
       children: [
         ShowText(text: 'รายได้วันนี้'),
         ShowText(
-          text: totelStr,
+          text: totelStr!,
           textStyle: TextStyle(fontSize: 60),
         ),
         ShowText(text: 'บาท'),
@@ -208,7 +208,7 @@ class _DetaliMoneyState extends State<DetaliMoney> {
             Expanded(
               flex: 1,
               child: ShowText(
-                text: mapTH[fourDigis[index]],
+                text: mapTH[fourDigis[index]]!,
               ),
             ),
             Expanded(

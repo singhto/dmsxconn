@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class MyCalculate {
   
     String canculateDifferance(
-      {@required String statusDate, @required String refNotification}) {
+      {required String statusDate, required String refNotification}) {
     String result;
 
       var stringsStatus = statusDate.split('-');

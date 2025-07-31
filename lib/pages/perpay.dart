@@ -35,11 +35,11 @@ class _PerPayState extends State<PerPay> {
     }
 
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    String userId = preferences.getString('id');
+    String? userId = preferences.getString('id');
     print('userId= $userId');
 
     String url =
-        'https://www.pea23.com/apipsinsx/getDataPerPay.php?isAdd=true&ref_user_id=$userId';
+        'https://www.dissrecs.com/apipsinsx/getDataPerPay.php?isAdd=true&ref_user_id=$userId';
     await Dio().get(url).then((value) {
       setState(() {
         loadStatus = false;
@@ -78,7 +78,7 @@ class _PerPayState extends State<PerPay> {
           child: ListTile(
             leading: Icon(Icons.money),
             title: Text(
-              perPayModels[index].prepayType,
+              perPayModels[index].prepayType!,
               style: TextStyle(
                 fontSize: 12,
               ),

@@ -18,9 +18,9 @@ class AddInformationUser extends StatefulWidget {
 }
 
 class _AddInformationUserState extends State<AddInformationUser> {
-  UserModel userModel;
-  File file;
-  String userAddress,
+  UserModel? userModel;
+  File? file;
+  String? userAddress,
       userEmail,
       userPhone,
       userBankName,
@@ -35,7 +35,7 @@ class _AddInformationUserState extends State<AddInformationUser> {
 
   Future<Null> readCurrentInfo() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    String id = preferences.getString('id');
+    String? id = preferences.getString('id');
 
     String url =
         '${MyConstant().domain}/apipsinsx/getUserWhereId.php?isAdd=true&user_id=$id';
@@ -46,12 +46,12 @@ class _AddInformationUserState extends State<AddInformationUser> {
     for (var map in result) {
       setState(() {
         userModel = UserModel.fromJson(map);
-        userAddress = userModel.userAdress;
-        userEmail = userModel.userEmail;
-        userPhone = userModel.userPhone;
-        userBankName = userModel.userBankName;
-        userBankNumber = userModel.userBankNumber;
-        userImg = userModel.userImg;
+        userAddress = userModel!.userAdress;
+        userEmail = userModel!.userEmail;
+        userPhone = userModel!.userPhone;
+        userBankName = userModel!.userBankName;
+        userBankNumber = userModel!.userBankNumber;
+        userImg = userModel!.userImg;
       });
     }
   }
@@ -129,7 +129,7 @@ class _AddInformationUserState extends State<AddInformationUser> {
     return Container(
       width: 300,
       child: ElevatedButton.icon(
-        style: ElevatedButton.styleFrom(primary: Colors.red),
+        style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
         onPressed: () => confirmDialog(),
         icon: Icon(
           Icons.save,
@@ -206,7 +206,7 @@ class _AddInformationUserState extends State<AddInformationUser> {
       String nameFile = 'staff$i.jpg';
       
       Map<String, dynamic> map = Map();
-      map['file'] = await MultipartFile.fromFile(file.path, filename: nameFile);
+      map['file'] = await MultipartFile.fromFile(file!.path, filename: nameFile);
       FormData formData = FormData.fromMap(map);
       
       String urlUpload = '${MyConstant().domain}/apipsinsx/saveFile.php';
@@ -221,10 +221,10 @@ class _AddInformationUserState extends State<AddInformationUser> {
   }
 
   Future processEditDatabase() async {
-    String id = userModel.userId;
+    String? id = userModel!.userId;
     
     String url =
-        'https://www.pea23.com/apipsinsx/editUserWhereId.php?isAdd=true&user_id=$id&user_email=$userEmail &user_phone=$userPhone&user_adress=$userAddress&user_bank_name=$userBankName&user_bank_number=$userBankNumber&user_img=$userImg';
+        'https://www.dissrecs.com/apipsinsx/editUserWhereId.php?isAdd=true&user_id=$id&user_email=$userEmail &user_phone=$userPhone&user_adress=$userAddress&user_bank_name=$userBankName&user_bank_number=$userBankNumber&user_img=$userImg';
     
     Response response = await Dio().get(url);
     
@@ -232,10 +232,10 @@ class _AddInformationUserState extends State<AddInformationUser> {
 
       await readCurrentInfo().then((value) async {
       SharedPreferences preferences = await SharedPreferences.getInstance();
-      preferences.setString('id', userModel.userId);
-      preferences.setString('staffname', userModel.staffname);
-      preferences.setString('user_email', userModel.userEmail);
-      preferences.setString('user_img', userModel.userImg);
+      preferences.setString('id', userModel!.userId!);
+      preferences.setString('staffname', userModel!.staffname!);
+      preferences.setString('user_email', userModel!.userEmail!);
+      preferences.setString('user_img', userModel!.userImg!);
     
       Navigator.pop(context);
       });
@@ -262,11 +262,11 @@ class _AddInformationUserState extends State<AddInformationUser> {
           height: 100,
           child: file == null
               ? CircularProfileAvatar(
-                  '${userModel.userImg}',
+                  '${userModel!.userImg}',
                   borderWidth: 4.0,
                 )
               : Image.file(
-                  file,
+                  file!,
                   fit: BoxFit.cover,
                 ),
         ),
@@ -289,7 +289,7 @@ class _AddInformationUserState extends State<AddInformationUser> {
         maxHeight: 600,
       );
       setState(() {
-        file = File(object.path);
+        file = File(object!.path);
       });
     } catch (e) {}
   }

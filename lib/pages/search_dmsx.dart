@@ -14,11 +14,11 @@ import 'package:psinsx/widgets/show_text.dart';
 
 class SearchDmsx extends StatefulWidget {
   const SearchDmsx({
-    Key key,
+    Key? key,
     this.displayBackIcon,
   }) : super(key: key);
 
-  final bool displayBackIcon;
+  final bool? displayBackIcon;
 
   @override
   State<SearchDmsx> createState() => _SearchDmsxState();
@@ -26,7 +26,7 @@ class SearchDmsx extends StatefulWidget {
 
 class _SearchDmsxState extends State<SearchDmsx> {
   final formStateKey = GlobalKey<FormState>();
-  String search;
+  String? search;
   var dmsxModels = <Dmsxmodel>[];
   bool displayBackIcon = true;
 
@@ -34,7 +34,7 @@ class _SearchDmsxState extends State<SearchDmsx> {
   void initState() {
     super.initState();
     if (widget.displayBackIcon !=null) {
-      displayBackIcon = widget.displayBackIcon;
+      displayBackIcon = widget.displayBackIcon!;
     }
   }
 
@@ -78,7 +78,7 @@ class _SearchDmsxState extends State<SearchDmsx> {
     );
   }
 
-  Widget newResultSearch({@required Dmsxmodel dmsxmodel}) {
+  Widget newResultSearch({required Dmsxmodel dmsxmodel}) {
     return Container(
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
@@ -87,9 +87,9 @@ class _SearchDmsxState extends State<SearchDmsx> {
       margin: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
       child: Column(
         children: [
-          newTitle(head: 'วันที่สถานะ', value: dmsxmodel.dataStatus),
-          newTitle(head: 'ชื่อ ผชฟ :', value: dmsxmodel.cusName),
-          newTitle(head: 'ที่อยู่ :', value: dmsxmodel.address),
+          newTitle(head: 'วันที่สถานะ', value: dmsxmodel.dataStatus!),
+          newTitle(head: 'ชื่อ ผชฟ :', value: dmsxmodel.cusName!),
+          newTitle(head: 'ที่อยู่ :', value: dmsxmodel.address!),
           ShowButton(
               pressFunc: () {
                 Navigator.push(
@@ -105,7 +105,7 @@ class _SearchDmsxState extends State<SearchDmsx> {
     );
   }
 
-  Row newTitle({@required String head, @required String value}) {
+  Row newTitle({required String head, required String value}) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -121,8 +121,8 @@ class _SearchDmsxState extends State<SearchDmsx> {
       children: [
         ElevatedButton(
           onPressed: () {
-            if (formStateKey.currentState.validate()) {
-              formStateKey.currentState.save();
+            if (formStateKey.currentState!.validate()) {
+              formStateKey.currentState!.save();
               print('##6jun search === $search');
 
               processReadSearch();
@@ -142,15 +142,15 @@ class _SearchDmsxState extends State<SearchDmsx> {
             textInputType: TextInputType.number,
             label: 'ค้นหา ca',
             iconData: Icons.search,
-            funcValidate: (String string) {
+            funcValidate: (String? string) {
               if (string?.isEmpty ?? true) {
                 return 'กรอกข้อมูลก่อนครับ';
               } else {
                 return null;
               }
             },
-            funcSave: (String string) {
-              search = string.trim();
+            funcSave: (String? string) {
+              search = string!.trim();
             }),
       ],
     );
@@ -164,7 +164,7 @@ class _SearchDmsxState extends State<SearchDmsx> {
     }
 
     String path =
-        'https://www.pea23.com/apipsinsx/getDmsxLocationWhereCa.php?isAdd=true&ca=$search';
+        'https://www.dissrecs.com/apipsinsx/getDmsxLocationWhereCa.php?isAdd=true&ca=$search';
     await Dio().get(path).then((value) {
       Navigator.pop(context);
       if (value.toString() == 'null') {

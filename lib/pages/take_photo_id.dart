@@ -10,14 +10,14 @@ import 'package:psinsx/widgets/widget_image.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TakePhotoId extends StatefulWidget {
-  const TakePhotoId({Key key}) : super(key: key);
+  const TakePhotoId({Key? key}) : super(key: key);
 
   @override
   State<TakePhotoId> createState() => _TakePhotoIdState();
 }
 
 class _TakePhotoIdState extends State<TakePhotoId> {
-  File file;
+  File? file;
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +45,7 @@ class _TakePhotoIdState extends State<TakePhotoId> {
                 child: file == null
                     ? WidgetImage(path: 'assets/images/card.png')
                     : Image.file(
-                        file,
+                        file!,
                         fit: BoxFit.cover,
                       ),
               ),
@@ -91,23 +91,23 @@ class _TakePhotoIdState extends State<TakePhotoId> {
   }
 
   Future<void> processUploadAndEdit() async {
-    String urlUpload = 'https://pea23.com/apipsinsx/saveImageIdCard.php';
+    String urlUpload = 'https://dissrecs.com/apipsinsx/saveImageIdCard.php';
 
     SharedPreferences preferences = await SharedPreferences.getInstance();
 
-    String nameIdCard = preferences.getString('id');
-    String id = nameIdCard;
+    String? nameIdCard = preferences.getString('id');
+    String id = nameIdCard!;
 
     nameIdCard = '$nameIdCard${Random().nextInt(1000000)}.jpg';
     Map<String, dynamic> map = {};
-    map['file'] = await MultipartFile.fromFile(file.path, filename: nameIdCard);
+    map['file'] = await MultipartFile.fromFile(file!.path, filename: nameIdCard);
     FormData data = FormData.fromMap(map);
     await Dio().post(urlUpload, data: data).then((value) async {
-      String urlIdCard = 'https://pea23.com/apipsinsx/imageIdCard/$nameIdCard';
+      String urlIdCard = 'https://dissrecs.com/apipsinsx/imageIdCard/$nameIdCard';
       print('##26oct url Idcare $urlIdCard');
 
       String urlEdit =
-          'https://pea23.com/apipsinsx/editStaffSurnameWhereId.php?isAdd=true&user_id=$id&staffsurname=$urlIdCard';
+          'https://dissrecs.com/apipsinsx/editStaffSurnameWhereId.php?isAdd=true&user_id=$id&staffsurname=$urlIdCard';
 
       await Dio().get(urlEdit).then((value) {
         Fluttertoast.showToast(

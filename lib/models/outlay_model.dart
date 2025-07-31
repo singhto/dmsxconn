@@ -1,22 +1,22 @@
 class OutlayModel {
-  String id;
-  String costTypeId;
-  String supplierName;
-  String supplierAddress;
-  String supplierTaxid;
-  String orderFromId;
-  String branch;
-  String userId;
-  String details;
-  String number;
-  String priceUnit;
-  String sum;
-  String tax;
-  String referenceNumber;
-  String image;
-  String createdAt;
-  String outlayStatus;
-  String createBy;
+  String? id;
+  String? costTypeId;
+  String? supplierName;
+  String? supplierAddress;
+  String? supplierTaxid;
+  String? orderFromId;
+  String? branch;
+  String? userId;
+  String? details;
+  String? number;
+  String? priceUnit;
+  String? sum;
+  String? tax;
+  String? referenceNumber;
+  String? image;
+  String? createdAt;
+  String? outlayStatus;
+  String? createBy;
 
   OutlayModel(
       {this.id,

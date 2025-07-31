@@ -22,7 +22,7 @@ class _CheckLoginState extends State<CheckLogin> {
   Future<Null> checkPreferance() async {
     try {
       SharedPreferences preferences = await SharedPreferences.getInstance();
-      String string = preferences.getString('id');
+      String? string = preferences.getString('id');
       if (string != null && string.isNotEmpty) {
         MaterialPageRoute route =
             MaterialPageRoute(builder: (context) => HomePage());

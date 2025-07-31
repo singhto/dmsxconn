@@ -3,7 +3,6 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:progress_dialog/progress_dialog.dart';
 import 'package:psinsx/models/data_location_model.dart';
 import 'package:psinsx/utility/my_dialog.dart';
 import 'package:psinsx/utility/normal_dialog.dart';
@@ -18,9 +17,9 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   List<DataLocationModel> dataLocationModels = [];
-  List<DataLocationModel> filterDataLocationModels = List();
+  List<DataLocationModel> filterDataLocationModels = [];
 
-  String search;
+  String? search;
   String nodata = 'กรุณากรอก ca ที่ต้องการค้นหา';
 
   @override
@@ -33,25 +32,25 @@ class _SearchPageState extends State<SearchPage> {
       dataLocationModels.clear();
     }
     String url =
-        'https://www.pea23.com/apipsinsx/getAllDataLocationWhereCa.php?isAdd=true&ca=$search';
+        'https://www.dissrecs.com/apipsinsx/getAllDataLocationWhereCa.php?isAdd=true&ca=$search';
 
-    ProgressDialog pr = ProgressDialog(context, isDismissible: false);
-    pr.style(
-        message: 'Loading...',
-        progressWidget: Container(
-          margin: EdgeInsets.all(10),
-          child: CircularProgressIndicator(),
-        ));
+    // ProgressDialog pr = ProgressDialog(context, isDismissible: false);
+    // pr.style(
+    //     message: 'Loading...',
+    //     progressWidget: Container(
+    //       margin: EdgeInsets.all(10),
+    //       child: CircularProgressIndicator(),
+    //     ));
 
     try {
-      await pr.show();
+      // await pr.show();
 
       var response = await Dio().get(url);
 
-      await pr.hide();
+      // await pr.hide();
       if (response.toString() == 'null') {
         setState(() {
-          pr.hide();
+          // pr.hide();
           nodata = 'ไม่พบ CA: $search';
         });
       } else {
@@ -145,17 +144,17 @@ class _SearchPageState extends State<SearchPage> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Image.network(
-                        dataLocationModels[index].imageInsx,
+                        dataLocationModels[index].imageInsx!,
                         width: 100,
                         fit: BoxFit.cover,
                       ),
                       WidgetTextRich(
                         head: 'Ca',
-                        value: dataLocationModels[index].ca,
+                        value: dataLocationModels[index].ca!,
                       ),
                       WidgetTextRich(
                         head: 'CusName',
-                        value: dataLocationModels[index].cusName,
+                        value: dataLocationModels[index].cusName!,
                       ),
                     ],
                   ),
@@ -173,7 +172,7 @@ class _SearchPageState extends State<SearchPage> {
                   leading: WidgetIconButton(
                     iconData: Icons.location_on_outlined,
                     pressFunc: () async {
-                      String url = dataLocationModels[index].ptcInsx;
+                      String url = dataLocationModels[index].ptcInsx!;
 
                       if (await canLaunch(url)) {
                         await launch(url);
@@ -182,7 +181,7 @@ class _SearchPageState extends State<SearchPage> {
                       }
                     },
                   ),
-                  title: Text(dataLocationModels[index].ca),
+                  title: Text(dataLocationModels[index].ca!),
                   subtitle: Text(
                     '${dataLocationModels[index].cusName} \n ${dataLocationModels[index].imgDate}',
                     style: TextStyle(

@@ -15,8 +15,8 @@ import 'package:psinsx/utility/normal_dialog.dart';
 class InsxPage extends StatefulWidget {
   final List<InsxModel2> insxModel2s;
   InsxPage({
-    Key key,
-    @required this.insxModel2s,
+    Key? key,
+    required this.insxModel2s,
   }) : super(key: key);
 
   @override
@@ -26,13 +26,13 @@ class InsxPage extends StatefulWidget {
 class _InsxPageState extends State<InsxPage> {
   bool loadStatus = true; //โหลด
   bool status = true; //มีข้อมูล
-  List<InsxModel> insxModels = List();
+  List<InsxModel> insxModels = [];
   List<InsxModel2> insxModel2s = [];
   var insxModels2trues = <InsxModel2>[];
   List<InsxModel2> filterInsxModel2s = [];
-  List<Color> colorIcons = List();
-  List<File> files = List();
-  String urlImage, search;
+  List<Color> colorIcons = [];
+  List<File?> files = [];
+  String? urlImage, search;
   final debouncer = Debouncer(milliseconds: 500);
 
   Map<String, Color> mapColors = {};
@@ -63,8 +63,8 @@ class _InsxPageState extends State<InsxPage> {
     for (var element in insxModel2s) {
       if (element.invoice_status != MyConstant.valueInvoiceStatus) {
         insxModels2trues.add(element);
-        colorIcons.add(calculageHues(element.noti_date));
-        mapColors[element.id] = calculageHues(element.noti_date);
+        colorIcons.add(calculageHues(element.noti_date!));
+        mapColors[element.id!] = calculageHues(element.noti_date!);
 
         files.add(null);
         filterInsxModel2s.add(element);
@@ -96,7 +96,7 @@ class _InsxPageState extends State<InsxPage> {
             child: Center(
               child: Text(
                 'No Data',
-                style: TextTheme().bodyText1,
+                style: TextTheme().bodyMedium,
               ),
             ),
           );
@@ -143,8 +143,8 @@ class _InsxPageState extends State<InsxPage> {
             size: 36,
             color: color,
           ),
-          title: Text(insxModel2.cus_name),
-          subtitle: Text(insxModel2.pea_no),
+          title: Text(insxModel2.cus_name!),
+          subtitle: Text(insxModel2.pea_no!),
         ),
         children: [
           Row(
@@ -214,7 +214,7 @@ class _InsxPageState extends State<InsxPage> {
                         color: mapColors[filterInsxModel2s[index].id],
                       ),
                       title: Text(
-                        filterInsxModel2s[index].cus_name,
+                        filterInsxModel2s[index].cus_name!,
                         style: TextStyle(
                           fontSize: 12,
                           //fontWeight: FontWeight.bold,
@@ -247,7 +247,7 @@ class _InsxPageState extends State<InsxPage> {
                 debouncer.run(() {
                   setState(() {
                     filterInsxModel2s = insxModel2s
-                        .where((u) => u.cus_name
+                        .where((u) => u.cus_name!
                             .toLowerCase()
                             .contains(value.toLowerCase()))
                         .toList();
@@ -269,14 +269,14 @@ class _InsxPageState extends State<InsxPage> {
 
   Future<Null> chooseCamera(int index) async {
     try {
-      var object = await ImagePicker().getImage(
+      var object = await ImagePicker().pickImage(
         source: ImageSource.camera,
         maxWidth: 800.0,
         maxHeight: 800.0,
       );
       setState(() {
-        files[index] = File(object.path);
-        uploadImage(files[index], index);
+        files[index] = File(object!.path);
+        uploadImage(files[index]!, index);
       });
     } catch (e) {}
   }
@@ -294,7 +294,7 @@ class _InsxPageState extends State<InsxPage> {
       FormData data = FormData.fromMap(map);
       await Dio().post(apiSaveFile, data: data).then((value) {
         //print('====>>> $value');
-        //print('Success url Image ==>> https://pea23.com/apipsinsx/upload/$fileName');
+        //print('Success url Image ==>> https://dissrecs.com/apipsinsx/upload/$fileName');
         urlImage = '${MyConstant().domain}/apipsinsx/upload/$fileName';
         print('=== usrlImage == $urlImage');
 
@@ -321,16 +321,16 @@ class _InsxPageState extends State<InsxPage> {
 }
 
 class Debouncer {
-  final int milliseconds;
-  VoidCallback action;
-  Timer _timer;
+  final int? milliseconds;
+  VoidCallback? action;
+  Timer? _timer;
 
   Debouncer({this.milliseconds});
 
   run(VoidCallback action) {
     if (null != _timer) {
-      _timer.cancel();
+      _timer!.cancel();
     }
-    _timer = Timer(Duration(milliseconds: milliseconds), action);
+    _timer = Timer(Duration(milliseconds: milliseconds!), action);
   }
 }

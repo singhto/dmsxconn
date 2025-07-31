@@ -1,21 +1,21 @@
 class ImageInsxModel {
-  String idCheck;
-  String ca;
-  String peaNo;
-  String cusName;
-  String cusTel;
-  String invoiceNo;
-  String ptcInsx;
-  String notiStatus;
-  String imageInsx;
-  String imgDate;
-  String workDate;
-  String distance;
-  String userId;
-  String userIdCheck;
-  String statusCheck;
-  String importDate;
-  String importDateCheck;
+  String? idCheck;
+  String? ca;
+  String? peaNo;
+  String? cusName;
+  String? cusTel;
+  String? invoiceNo;
+  String? ptcInsx;
+  String? notiStatus;
+  String? imageInsx;
+  String? imgDate;
+  String? workDate;
+  String? distance;
+  String? userId;
+  String? userIdCheck;
+  String? statusCheck;
+  String? importDate;
+  String? importDateCheck;
 
   ImageInsxModel(
       {this.idCheck,

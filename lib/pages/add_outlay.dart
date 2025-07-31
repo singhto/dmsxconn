@@ -16,15 +16,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart';
 
 class AddOutLay extends StatefulWidget {
-  final SubModel subModel;
-  AddOutLay({Key key, this.subModel}) : super(key: key);
+  final SubModel? subModel;
+  AddOutLay({Key? key, this.subModel}) : super(key: key);
   @override
   _AddOutLayState createState() => _AddOutLayState();
 }
 
 class _AddOutLayState extends State<AddOutLay> {
-  SubModel subModel;
-  String valueChoose,
+  SubModel? subModel;
+  String? valueChoose,
       supplierName,
       details,
       number,
@@ -33,11 +33,11 @@ class _AddOutLayState extends State<AddOutLay> {
       tax,
       referenceNumber,
       image;
-  DateTime createdAt;
-  DateTime createDate;
+  DateTime? createdAt;
+  DateTime? createDate;
   TextEditingController dateCtl = TextEditingController();
   List listItem = ['แก็สโซฮอล91', 'แก็สโซฮอล95', 'ดีเซล'];
-  File file;
+  File? file;
   DateTime selectedDate = DateTime.now();
 
   var typeOiles = MyConstant.typeOils;
@@ -55,7 +55,7 @@ class _AddOutLayState extends State<AddOutLay> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('${subModel.supplierName}'),
+        title: Text('${subModel!.supplierName}'),
       ),
       body: SingleChildScrollView(
         child: Center(
@@ -91,20 +91,20 @@ class _AddOutLayState extends State<AddOutLay> {
     );
   }
 
-  Widget newTypeOil() => DropdownButton<String>(
-        items: dropdownMenuItems,
-        onChanged: (value) {},
-      );
+  // Widget newTypeOil() => DropdownButton<String>(
+  //       items: dropdownMenuItems,
+  //       onChanged: (value) {},
+  //     );
 
   Future<Null> chooseImage(ImageSource source) async {
     try {
-      var object = await ImagePicker().getImage(
+      var object = await ImagePicker().pickImage(
         source: source,
         maxWidth: 600,
         maxHeight: 600,
       );
       setState(() {
-        file = File(object.path);
+        file = File(object!.path);
       });
     } catch (e) {}
   }
@@ -125,7 +125,7 @@ class _AddOutLayState extends State<AddOutLay> {
                     Icons.image,
                     size: 200,
                   )
-                : Image.file(file),
+                : Image.file(file!),
           ),
           IconButton(
             icon: Icon(Icons.add_photo_alternate_rounded),
@@ -135,7 +135,7 @@ class _AddOutLayState extends State<AddOutLay> {
         ],
       );
 
-  void showToast(String msg, {int duration, int gravity}) {
+  void showToast(String msg, {int? duration, int? gravity}) {
     Toast.show(msg, duration: duration, gravity: gravity);
   }
 
@@ -145,23 +145,23 @@ class _AddOutLayState extends State<AddOutLay> {
           width: MediaQuery.of(context).size.width,
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              primary: Colors.red[900],
+              backgroundColor: Colors.red[900],
             ),
             onPressed: () {
               if (file == null) {
                 normalDialog(context, 'กรุณาเลือรูปภาพก่อน');
               } else if (details == null ||
-                  details.isEmpty ||
+                  details!.isEmpty ||
                   number == null ||
-                  number.isEmpty ||
+                  number!.isEmpty ||
                   priceUnit == null ||
-                  priceUnit.isEmpty ||
+                  priceUnit!.isEmpty ||
                   sum == null ||
-                  sum.isEmpty ||
+                  sum!.isEmpty ||
                   tax == null ||
-                  tax.isEmpty ||
+                  tax!.isEmpty ||
                   referenceNumber == null ||
-                  referenceNumber.isEmpty) {
+                  referenceNumber!.isEmpty) {
                 normalDialog(context, 'กรุกณากรอข้อมูลให้ครบทุกช่อง');
               } else {
                 uploadOutlayInserData();
@@ -178,7 +178,7 @@ class _AddOutLayState extends State<AddOutLay> {
       );
 
   Future<Null> uploadOutlayInserData() async {
-    String urlUpload = 'https://www.pea23.com/apipsinsx/saveFileOutlay.php';
+    String urlUpload = 'https://www.dissrecs.com/apipsinsx/saveFileOutlay.php';
 
     Random random = Random();
 
@@ -188,7 +188,7 @@ class _AddOutLayState extends State<AddOutLay> {
 
     try {
       Map<String, dynamic> map = Map();
-      map['file'] = await MultipartFile.fromFile(file.path, filename: nameFile);
+      map['file'] = await MultipartFile.fromFile(file!.path, filename: nameFile);
       FormData formData = FormData.fromMap(map);
 
       await Dio().post(urlUpload, data: formData).then((value) async {
@@ -196,12 +196,12 @@ class _AddOutLayState extends State<AddOutLay> {
         print('urlPathHmage = ${MyConstant().domain}$urlPathImage');
 
         SharedPreferences preferences = await SharedPreferences.getInstance();
-        String userId = preferences.getString('id');
+        String? userId = preferences.getString('id');
         print('userId === $userId');
-        String supplierAddress = subModel.supplierAddress;
-        String supplierName = subModel.supplierName;
-        String supplierTaxid = subModel.supplierTaxid;
-        String branch = subModel.branch;
+        String? supplierAddress = subModel!.supplierAddress;
+        String? supplierName = subModel!.supplierName;
+        String? supplierTaxid = subModel!.supplierTaxid;
+        String? branch = subModel!.branch;
         DateTime createDate = DateTime.now();
 
         print('supplierAddress === $supplierAddress');
@@ -209,20 +209,20 @@ class _AddOutLayState extends State<AddOutLay> {
         print(createDate.toString());
 
         String urlInsertData =
-            'https://www.pea23.com/apipsinsx/addDataOutlay.php?isAdd=true&costType_id=1&supplier_name=$supplierName&supplier_address=$supplierAddress&supplier_taxid=$supplierTaxid&orderFrom_id=1&branch=$branch&user_id=$userId&details=$details&number=$number&priceUnit=$priceUnit&sum=$sum&tax=$tax&referenceNumber=$referenceNumber&image=$urlPathImage&createdAt=$createDate&outlay_status=NO&create_by=$userId&create_date=$createDate';
+            'https://www.dissrecs.com/apipsinsx/addDataOutlay.php?isAdd=true&costType_id=1&supplier_name=$supplierName&supplier_address=$supplierAddress&supplier_taxid=$supplierTaxid&orderFrom_id=1&branch=$branch&user_id=$userId&details=$details&number=$number&priceUnit=$priceUnit&sum=$sum&tax=$tax&referenceNumber=$referenceNumber&image=$urlPathImage&createdAt=$createDate&outlay_status=NO&create_by=$userId&create_date=$createDate';
         await Dio().get(urlInsertData);
         showToast('อัพโหลดสำเร็จ', gravity: Toast.center);
-        routeTuService();
+        // routeTuService();
       });
     } catch (e) {}
   }
 
-  Future<Null> routeTuService() async {
-    MaterialPageRoute route = MaterialPageRoute(
-      builder: (context) => OilPage(),
-    );
-    Navigator.pushAndRemoveUntil(context, route, (route) => false);
-  }
+  // Future<Null> routeTuService() async {
+  //   MaterialPageRoute route = MaterialPageRoute(
+  //     builder: (context) => OilPage(),
+  //   );
+  //   Navigator.pushAndRemoveUntil(context, route, (route) => false);
+  // }
 
   Future<Null> confirmDialog() async {
     showDialog(
@@ -290,25 +290,25 @@ class _AddOutLayState extends State<AddOutLay> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'ชื่อซับพลาย : ${subModel.supplierName}',
+                'ชื่อซับพลาย : ${subModel!.supplierName}',
                 style: TextStyle(
                   fontSize: 14,
                 ),
               ),
               Text(
-                'เลขภาษี : ${subModel.supplierTaxid}',
+                'เลขภาษี : ${subModel!.supplierTaxid}',
                 style: TextStyle(
                   fontSize: 14,
                 ),
               ),
               Text(
-                'สาขาที่ : ${subModel.branch}',
+                'สาขาที่ : ${subModel!.branch}',
                 style: TextStyle(
                   fontSize: 14,
                 ),
               ),
               Text(
-                'ที่อยู่ : ${subModel.supplierAddress}',
+                'ที่อยู่ : ${subModel!.supplierAddress}',
                 style: TextStyle(
                   fontSize: 14,
                 ),
@@ -327,7 +327,7 @@ class _AddOutLayState extends State<AddOutLay> {
             labelStyle: TextStyle(),
             labelText: 'ชนิดน้ำมัน',
             enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey[900])),
+                borderSide: BorderSide(color: Colors.grey)),
             focusedBorder:
                 OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
           ),
@@ -343,7 +343,7 @@ class _AddOutLayState extends State<AddOutLay> {
             labelStyle: TextStyle(),
             labelText: 'ภาษีมูลค่าเพิ่ม',
             enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey[900])),
+                borderSide: BorderSide(color: Colors.grey)),
             focusedBorder:
                 OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
           ),
@@ -359,7 +359,7 @@ class _AddOutLayState extends State<AddOutLay> {
             labelStyle: TextStyle(),
             labelText: 'ราคาต่อหน่วย',
             enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey[900])),
+                borderSide: BorderSide(color: Colors.grey)),
             focusedBorder:
                 OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
           ),
@@ -375,7 +375,7 @@ class _AddOutLayState extends State<AddOutLay> {
             labelStyle: TextStyle(),
             labelText: 'ปริมาณ',
             enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey[900])),
+                borderSide: BorderSide(color: Colors.grey)),
             focusedBorder:
                 OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
           ),
@@ -391,7 +391,7 @@ class _AddOutLayState extends State<AddOutLay> {
             labelStyle: TextStyle(),
             labelText: 'รวมเป็นเงิน',
             enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey[900])),
+                borderSide: BorderSide(color: Colors.grey)),
             focusedBorder:
                 OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
           ),
@@ -407,7 +407,7 @@ class _AddOutLayState extends State<AddOutLay> {
             labelStyle: TextStyle(),
             labelText: 'เลขที่ใบเสร็จ',
             enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey[900])),
+                borderSide: BorderSide(color: Colors.grey)),
             focusedBorder:
                 OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
           ),
@@ -437,7 +437,7 @@ class _AddOutLayState extends State<AddOutLay> {
       );
 
   _selectDate(BuildContext context) async {
-    final DateTime createdAt = await showDatePicker(
+    final DateTime? createdAt = await showDatePicker(
       context: context,
       initialDate: selectedDate, // Refer step 1
       firstDate: DateTime(2000),

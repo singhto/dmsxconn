@@ -6,8 +6,8 @@ class ShowMapFromSearch extends StatefulWidget {
   final Dmsxmodel dmsxmodel;
 
   const ShowMapFromSearch({
-    Key key,
-    @required this.dmsxmodel,
+    Key? key,
+    required this.dmsxmodel,
   }) : super(key: key);
 
   @override
@@ -15,7 +15,7 @@ class ShowMapFromSearch extends StatefulWidget {
 }
 
 class _ShowMapFromSearchState extends State<ShowMapFromSearch> {
-  Dmsxmodel dmsxmodel;
+  Dmsxmodel? dmsxmodel;
 
   @override
   void initState() {
@@ -28,13 +28,13 @@ class _ShowMapFromSearchState extends State<ShowMapFromSearch> {
       Marker(
         markerId: MarkerId('id'),
         position: LatLng(
-          double.parse(dmsxmodel.lat.trim()),
+          double.parse(dmsxmodel!.lat!.trim()),
           double.parse(
-            dmsxmodel.lng.trim(),
+            dmsxmodel!.lng!.trim(),
           ),
         ),
         infoWindow:
-            InfoWindow(title: dmsxmodel.cusName, snippet: dmsxmodel.address),
+            InfoWindow(title: dmsxmodel!.cusName, snippet: dmsxmodel!.address),
       ),
     ].toSet();
   }
@@ -43,7 +43,7 @@ class _ShowMapFromSearchState extends State<ShowMapFromSearch> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(dmsxmodel.ca),
+        title: Text(dmsxmodel!.ca!),
       ),
       body: LayoutBuilder(
         builder: (context, constraints) => Container(
@@ -52,9 +52,9 @@ class _ShowMapFromSearchState extends State<ShowMapFromSearch> {
           child: GoogleMap(
             initialCameraPosition: CameraPosition(
                 target: LatLng(
-                  double.parse(dmsxmodel.lat.trim()),
+                  double.parse(dmsxmodel!.lat!.trim()),
                   double.parse(
-                    dmsxmodel.lng.trim(),
+                    dmsxmodel!.lng!.trim(),
                   ),
                 ),
                 zoom: 16),

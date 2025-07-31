@@ -1,29 +1,29 @@
 import 'dart:convert';
 
 class InsxSQLiteModel {
-  final int id;
-  final String ca;
-  final String pea_no;
-  final String cus_name;
-  final String cus_id;
-  final String invoice_no;
-  final String bill_date;
-  final String bp_no;
-  final String write_id;
-  final String portion;
-  final String ptc_no;
-  final String address;
-  final String new_period_date;
-  final String write_date;
-  final String lat;
-  final String lng;
-  final String invoice_status;
-  final String noti_date;
-  final String update_date;
-  final String timestamp;
-  final String workImage;
-  final String worker_code;
-  final String worker_name;
+  final int? id;
+  final String? ca;
+  final String? pea_no;
+  final String? cus_name;
+  final String? cus_id;
+  final String? invoice_no;
+  final String? bill_date;
+  final String? bp_no;
+  final String? write_id;
+  final String? portion;
+  final String? ptc_no;
+  final String? address;
+  final String? new_period_date;
+  final String? write_date;
+  final String? lat;
+  final String? lng;
+  final String? invoice_status;
+  final String? noti_date;
+  final String? update_date;
+  final String? timestamp;
+  final String? workImage;
+  final String? worker_code;
+  final String? worker_name;
   InsxSQLiteModel({
     this.id,
     this.ca,
@@ -51,29 +51,29 @@ class InsxSQLiteModel {
   });
 
   InsxSQLiteModel copyWith({
-    int id,
-    String ca,
-    String pea_no,
-    String cus_name,
-    String cus_id,
-    String invoice_no,
-    String bill_date,
-    String bp_no,
-    String write_id,
-    String portion,
-    String ptc_no,
-    String address,
-    String new_period_date,
-    String write_date,
-    String lat,
-    String lng,
-    String invoice_status,
-    String noti_date,
-    String update_date,
-    String timestamp,
-    String workImage,
-    String worker_code,
-    String worker_name,
+    int? id,
+    String? ca,
+    String? pea_no,
+    String? cus_name,
+    String? cus_id,
+    String? invoice_no,
+    String? bill_date,
+    String? bp_no,
+    String? write_id,
+    String? portion,
+    String? ptc_no,
+    String? address,
+    String? new_period_date,
+    String? write_date,
+    String? lat,
+    String? lng,
+    String? invoice_status,
+    String? noti_date,
+    String? update_date,
+    String? timestamp,
+    String? workImage,
+    String? worker_code,
+    String? worker_name,
   }) {
     return InsxSQLiteModel(
       id: id ?? this.id,

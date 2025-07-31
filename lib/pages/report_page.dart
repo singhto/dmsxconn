@@ -11,7 +11,7 @@ import 'package:psinsx/utility/my_style.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ReportPage extends StatefulWidget {
-  ReportPage({Key key}) : super(key: key);
+  ReportPage({Key? key}) : super(key: key);
 
   @override
   _ReportPageState createState() => _ReportPageState();
@@ -20,11 +20,11 @@ class ReportPage extends StatefulWidget {
 class _ReportPageState extends State<ReportPage> {
   bool loadStatus = true; //โหลด
   bool status = true; //มีข้อมูล
-  List<InsxModel> insxModels = List();
+  List<InsxModel> insxModels = [];
   List<InsxModel2> insxModel2s = [];
-  List<Color> colorIcons = List();
-  List<File> files = List();
-  String urlImage;
+  List<Color> colorIcons = [];
+  List<File?> files = [];
+  String? urlImage;
 
   @override
   void initState() {
@@ -46,10 +46,10 @@ class _ReportPageState extends State<ReportPage> {
       setToOrigin();
     }
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    String workername = preferences.getString('staffname');
+    String? workername = preferences.getString('staffname');
 
     String url =
-        'https://www.pea23.com/apipsinsx/getInsxWhereUserSuccess.php?isAdd=true&worker_name=$workername';
+        'https://www.dissrecs.com/apipsinsx/getInsxWhereUserSuccess.php?isAdd=true&worker_name=$workername';
     await Dio().get(url).then((value) {
       setState(() {
         loadStatus = false;
@@ -61,7 +61,7 @@ class _ReportPageState extends State<ReportPage> {
           InsxModel2 insxModel2 = InsxModel2.fromMap(map);
           setState(() {
             insxModel2s.add(insxModel2);
-            colorIcons.add(calculageHues(insxModel2.noti_date));
+            colorIcons.add(calculageHues(insxModel2.noti_date!));
             files.add(null);
           });
         }
@@ -88,7 +88,7 @@ class _ReportPageState extends State<ReportPage> {
             child: Center(
               child: Text(
                 'ไม่มีข้อมูลอัพโหลดเสร็จ',
-                style: TextTheme().bodyText1,
+                style: TextTheme().bodyMedium,
               ),
             ),
           );
@@ -158,7 +158,7 @@ class _ReportPageState extends State<ReportPage> {
                       ),
                    
                       title: Text(
-                        insxModel2s[index].cus_name,
+                        insxModel2s[index].cus_name!,
                         style: TextStyle(
                           fontSize: 10,
                        

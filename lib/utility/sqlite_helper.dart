@@ -59,7 +59,7 @@ class SQLiteHelper {
       print('##### insert value Success ###');
     } catch (e) {}
   }
-  Future<List<InsxSQLiteModel>> readSQLite()async{
+  Future<List<InsxSQLiteModel>?> readSQLite()async{
     Database database = await connectedDtabase();
     try {
 

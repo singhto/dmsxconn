@@ -9,7 +9,7 @@ import 'package:psinsx/utility/my_style.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DmsxPage extends StatefulWidget {
-  DmsxPage({Key key}) : super(key: key);
+  DmsxPage({Key? key}) : super(key: key);
 
   @override
   _DmsxPageState createState() => _DmsxPageState();
@@ -18,8 +18,8 @@ class DmsxPage extends StatefulWidget {
 class _DmsxPageState extends State<DmsxPage> {
   bool loadStatus = true; //โหลด
   bool status = true; //มีข้อมูล
-  List<InsxModel> insxModels = List();
-  List<Dmsxmodel> dmsxModels = List();
+  List<InsxModel> insxModels = [];
+  List<Dmsxmodel> dmsxModels = [];
   //List<Color> colorIcons = List();
 
   @override
@@ -30,13 +30,13 @@ class _DmsxPageState extends State<DmsxPage> {
 
   Future<Null> readInsx() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    String workername = preferences.getString('staffname');
+    String? workername = preferences.getString('staffname');
     print('workername === $workername');
-    String userId = preferences.getString('id');
+    String? userId = preferences.getString('id');
     print('id ===== $userId');
 
     String url =
-        'https://www.pea23.com/apipsinsx/getDmsxWherUser.php?isAdd=true&user_id=$userId';
+        'https://www.dissrecs.com/apipsinsx/getDmsxWherUser.php?isAdd=true&user_id=$userId';
     await Dio().get(url).then((value) {
       setState(() {
         loadStatus = false;
@@ -104,7 +104,7 @@ class _DmsxPageState extends State<DmsxPage> {
     return status
         ? showListDmsx()
         : Center(
-            child: Text('ไม่พบข้อมูล'),
+            child: Text('ไม่มีข้อมูล'),
           );
   }
 
@@ -140,7 +140,7 @@ class _DmsxPageState extends State<DmsxPage> {
                         //color: colorIcons[index],
                       ),
                       title: Text(
-                        dmsxModels[index].cusName,
+                        dmsxModels[index].cusName!,
                         style: TextStyle(
                           fontSize: 12,
                           //fontWeight: FontWeight.bold,

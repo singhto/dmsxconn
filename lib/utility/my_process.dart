@@ -20,11 +20,11 @@ class MyProcess {
   }
 
   Future<Null> editDataInsx2(
-      {@required InsxModel2 insxModel2,
-      @required String distance,
-      @required String work_image}) async {
+      {required InsxModel2 insxModel2,
+      required String distance,
+      required String work_image}) async {
     String url =
-        'https://www.pea23.com/apipsinsx/editDataWhereInvoiceNo.php?isAdd=true&invoice_no=${insxModel2.invoice_no}&distance=$distance&work_image=$work_image';
+        'https://www.dissrecs.com/apipsinsx/editDataWhereInvoiceNo.php?isAdd=true&invoice_no=${insxModel2.invoice_no}&distance=$distance&work_image=$work_image';
 
     await Dio().get(url).then((value) {
       if (value.toString() != 'true') {

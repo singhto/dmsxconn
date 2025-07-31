@@ -2,10 +2,10 @@ import 'dart:convert';
 
 class ImageUploadModel {
 
-  final String image_id;
-  final String image_name;
-  final String image_update;
-  final String user_id;
+  final String? image_id;
+  final String? image_name;
+  final String? image_update;
+  final String? user_id;
   ImageUploadModel({
     this.image_id,
     this.image_name,

@@ -12,17 +12,17 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class MapInsx extends StatefulWidget {
   final List<InsxModel2> insxModel2s;
-  MapInsx({@required this.insxModel2s});
+  MapInsx({required this.insxModel2s});
 
   @override
   _MapInsxState createState() => _MapInsxState();
 }
 
 class _MapInsxState extends State<MapInsx> {
-  List<InsxModel2> insxModel2s;
+  List<InsxModel2> insxModel2s = [];
 
-  LatLng startMapLatLng;
-  double lat, lng;
+  LatLng? startMapLatLng;
+  double? lat, lng;
 
   @override
   void initState() {
@@ -53,9 +53,9 @@ class _MapInsxState extends State<MapInsx> {
             // find Lat, lng
             var position = await findPosition();
             setState(() {
-              lat = position.latitude;
+              lat = position!.latitude;
               lng = position.longitude;
-              startMapLatLng = LatLng(lat, lng);
+              startMapLatLng = LatLng(lat!, lng!);
             });
           }
         });
@@ -63,9 +63,9 @@ class _MapInsxState extends State<MapInsx> {
         // find Lat, lng
         var position = await findPosition();
         setState(() {
-          lat = position.latitude;
+          lat = position!.latitude;
           lng = position.longitude;
-          startMapLatLng = LatLng(lat, lng);
+          startMapLatLng = LatLng(lat!, lng!);
         });
       }
     } else {
@@ -78,7 +78,7 @@ class _MapInsxState extends State<MapInsx> {
     }
   }
 
-  Future<Position> findPosition() async {
+  Future<Position?> findPosition() async {
     Position position;
     try {
       position = await Geolocator.getCurrentPosition();
@@ -93,10 +93,10 @@ class _MapInsxState extends State<MapInsx> {
     insxModel2s.clear();
 
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    String workername = preferences.getString('staffname');
+    String? workername = preferences.getString('staffname');
 
     String url =
-        'https://www.pea23.com/apipsinsx/getInsxWhereUser.php?isAdd=true&worker_name=$workername';
+        'https://www.dissrecs.com/apipsinsx/getInsxWhereUser.php?isAdd=true&worker_name=$workername';
 
     await Dio().get(url).then((value) {
       for (var item in json.decode(value.data)) {
@@ -115,7 +115,7 @@ class _MapInsxState extends State<MapInsx> {
 
     Marker userMarker = Marker(
         markerId: MarkerId('idUser'),
-        position: LatLng(lat, lng),
+        position: LatLng(lat!, lng!),
         infoWindow: InfoWindow(title: 'คุณอยู่ที่นี่'), icon: BitmapDescriptor.defaultMarkerWithHue(300));
 
     markers.add(userMarker);
@@ -123,9 +123,9 @@ class _MapInsxState extends State<MapInsx> {
     for (var item in insxModel2s) {
       Marker marker = Marker(
         icon: BitmapDescriptor.defaultMarkerWithHue(
-            calculageHues(item.noti_date)),
+            calculageHues(item.noti_date!)),
         markerId: MarkerId('id${item.id}'),
-        position: LatLng(double.parse(item.lat), double.parse(item.lng)),
+        position: LatLng(double.parse(item.lat!), double.parse(item.lng!)),
         infoWindow: InfoWindow(
           title: item.cus_name,
           snippet: 'pea: ${item.pea_no}',
@@ -216,7 +216,7 @@ class _MapInsxState extends State<MapInsx> {
   GoogleMap buildMainMap() {
     return GoogleMap(
       initialCameraPosition: CameraPosition(
-        target: startMapLatLng,
+        target: startMapLatLng!,
         zoom: 8,
       ),
       mapType: MapType.normal,
@@ -230,7 +230,7 @@ class _MapInsxState extends State<MapInsx> {
   GoogleMap buildSecondMap() {
     return GoogleMap(
       initialCameraPosition: CameraPosition(
-        target: startMapLatLng,
+        target: startMapLatLng!,
         zoom: 6,
       ),
       mapType: MapType.normal,
@@ -250,10 +250,10 @@ class _MapInsxState extends State<MapInsx> {
             size: 36,
           ),
           title: Text(
-            insxModel2.cus_name,
+            insxModel2.cus_name!,
             style: TextStyle(fontSize: 14),
           ),
-          subtitle: Text(insxModel2.pea_no, style: TextStyle(fontSize: 14)),
+          subtitle: Text(insxModel2.pea_no!, style: TextStyle(fontSize: 14)),
         ),
         children: [
           Row(

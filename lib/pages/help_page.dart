@@ -43,7 +43,7 @@ class _HelpPageState extends State<HelpPage> {
   }
 
   Future<Null> readHelpData() async {
-    String url = 'https://www.pea23.com/apipsinsx/getDataManual.php';
+    String url = 'https://www.dissrecs.com/apipsinsx/getDataManual.php';
     await Dio().get(url).then((value) {
       if (value.toString() != 'null') {
         var result = json.decode(value.data);
@@ -69,7 +69,7 @@ class _HelpPageState extends State<HelpPage> {
             child: Center(
               child: Text(
                 'ไม่มีข้อมูล',
-                style: TextTheme().bodyText1,
+                style: TextTheme().bodyMedium,
               ),
             ),
           );
@@ -98,7 +98,7 @@ class _HelpPageState extends State<HelpPage> {
                   }
 
                   searchManualModels = searchManualModels
-                      .where((element) => element.mTopic
+                      .where((element) => element.mTopic!
                           .toLowerCase()
                           .contains(value.toLowerCase()))
                       .toList();
@@ -124,7 +124,7 @@ class _HelpPageState extends State<HelpPage> {
                       leading: Image.network(
                           '${searchManualModels[index].mImageUrl}'),
                       title: Text(
-                        searchManualModels[index].mTopic,
+                        searchManualModels[index].mTopic!,
                         style: TextStyle(
                           fontSize: 14,
                         ),
@@ -156,17 +156,17 @@ class _HelpPageState extends State<HelpPage> {
 
 class Debouncer {
   final int milliSecond;
-  Timer timer;
-  VoidCallback voidCallback;
+  Timer? timer;
+  VoidCallback? voidCallback;
   Debouncer({
-    @required this.milliSecond,
+    required this.milliSecond,
     this.timer,
     this.voidCallback,
   });
 
   run(VoidCallback voidCallback) {
     if (timer != null) {
-      timer.cancel();
+      timer!.cancel();
     }
     timer = Timer(Duration(milliseconds: milliSecond), voidCallback);
   }

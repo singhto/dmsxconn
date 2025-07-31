@@ -11,15 +11,15 @@ import 'package:psinsx/widgets/show_tetle.dart';
 
 class DmsxListPage extends StatefulWidget {
   final List<Dmsxmodel> dmsxModels;
-  const DmsxListPage({Key key, @required this.dmsxModels}) : super(key: key);
+  const DmsxListPage({Key? key, required this.dmsxModels}) : super(key: key);
 
   @override
   _DmsxListPageState createState() => _DmsxListPageState();
 }
 
 class _DmsxListPageState extends State<DmsxListPage> {
-  List<Dmsxmodel> dmsxModels;
-  List<Dmsxmodel> searchDmsxModels;
+  List<Dmsxmodel> dmsxModels = [];
+  List<Dmsxmodel> searchDmsxModels = [];
   final debouncer = Debouncer(millisecond: 500);
 
   @override
@@ -69,7 +69,7 @@ class _DmsxListPageState extends State<DmsxListPage> {
             debouncer.run(() {
               setState(() {
                 searchDmsxModels = dmsxModels
-                    .where((element) => element.cusName
+                    .where((element) => element.cusName!
                         .toLowerCase()
                         .contains(value.toLowerCase()))
                     .toList();
@@ -107,13 +107,13 @@ class _DmsxListPageState extends State<DmsxListPage> {
                       Row(
                         children: [
                           ShowTitle(
-                            title: searchDmsxModels[index].cusName.trim(),
+                            title: searchDmsxModels[index].cusName!.trim(),
                             textStyle: MyConstant().h3Style(),
                           ),
                         ],
                       ),
                       ShowTitle(
-                        title: searchDmsxModels[index].line.trim(),
+                        title: searchDmsxModels[index].line!.trim(),
                         textStyle: MyConstant().h4Style(),
                       ),
                       Row(
@@ -123,7 +123,7 @@ class _DmsxListPageState extends State<DmsxListPage> {
                             style: TextStyle(fontSize: 10),
                           ),
                           ShowTitle(
-                            title: searchDmsxModels[index].statusTxt.trim(),
+                            title: searchDmsxModels[index].statusTxt!.trim(),
                             textStyle: MyConstant().h5Style(),
                           ),
                         ],
@@ -135,7 +135,7 @@ class _DmsxListPageState extends State<DmsxListPage> {
                             textStyle: MyConstant().h4Style(),
                           ),
                           ShowTitle(
-                            title: searchDmsxModels[index].peaNo.trim(),
+                            title: searchDmsxModels[index].peaNo!.trim(),
                             textStyle: MyConstant().h4Style(),
                           ),
                         ],
@@ -147,7 +147,7 @@ class _DmsxListPageState extends State<DmsxListPage> {
                             textStyle: MyConstant().h5Style(),
                           ),
                           ShowTitle(
-                            title: searchDmsxModels[index].lat.trim(),
+                            title: searchDmsxModels[index].lat!.trim(),
                             textStyle: MyConstant().h5Style(),
                           ),
                           Text(
@@ -155,7 +155,7 @@ class _DmsxListPageState extends State<DmsxListPage> {
                             style: TextStyle(fontSize: 12),
                           ),
                           ShowTitle(
-                            title: searchDmsxModels[index].lng.trim(),
+                            title: searchDmsxModels[index].lng!.trim(),
                             textStyle: MyConstant().h5Style(),
                           ),
                         ],
@@ -163,13 +163,13 @@ class _DmsxListPageState extends State<DmsxListPage> {
                       ShowTitle(
                         title: newShowDate(
                             header: 'วันแจ้งดำเนินการ : ',
-                            dateTimeStr: dmsxModels[index].refnoti_date),
+                            dateTimeStr: dmsxModels[index].refnoti_date ?? ''),
                         textStyle: MyConstant().h5Style(),
                       ),
                       ShowTitle(
                         title: MyCalculate().canculateDifferance(
-                          statusDate: dmsxModels[index].dataStatus,
-                          refNotification: dmsxModels[index].refnoti_date,
+                          statusDate: dmsxModels[index].dataStatus ?? '',
+                          refNotification: dmsxModels[index].refnoti_date ?? '',
                         ),
                         textStyle: MyConstant().h5Style(),
                       ),
@@ -177,9 +177,9 @@ class _DmsxListPageState extends State<DmsxListPage> {
                   ),
                 ),
                 Expanded(
-                  child: searchDmsxModels[index].images.isEmpty
+                  child: searchDmsxModels[index].images!.isEmpty
                       ? SizedBox()
-                      : showImage(searchDmsxModels[index].images),
+                      : showImage(searchDmsxModels[index].images!),
                 ),
               ],
             ),
@@ -216,7 +216,7 @@ class _DmsxListPageState extends State<DmsxListPage> {
     );
   }
 
-  String newShowDate({@required String header, @required String dateTimeStr}) {
+  String newShowDate({required String header, required String dateTimeStr}) {
     String result;
 
     var strings = dateTimeStr.split('-');
@@ -236,14 +236,14 @@ class _DmsxListPageState extends State<DmsxListPage> {
 
 class Debouncer {
   final int millisecond;
-  VoidCallback voidCallback;
-  Timer timer;
+  VoidCallback? voidCallback;
+  Timer? timer;
 
-  Debouncer({@required this.millisecond});
+  Debouncer({required this.millisecond});
 
   run(VoidCallback voidCallback) {
     if (timer != null) {
-      timer.cancel();
+      timer!.cancel();
     }
     timer = Timer(Duration(milliseconds: millisecond), voidCallback);
   }

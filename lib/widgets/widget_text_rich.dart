@@ -3,9 +3,9 @@ import 'package:psinsx/utility/my_constant.dart';
 
 class WidgetTextRich extends StatelessWidget {
   const WidgetTextRich({
-    Key key,
-    @required this.head,
-    @required this.value,
+    Key? key,
+    required this.head,
+    required this.value,
   }) : super(key: key);
 
   final String head;

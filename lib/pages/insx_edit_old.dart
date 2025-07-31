@@ -16,28 +16,28 @@ import 'package:psinsx/utility/my_process.dart';
 import 'package:psinsx/utility/sqlite_helper.dart';
 
 class InsxEditOld extends StatefulWidget {
-  final InsxModel2 insxModel2;
-  final bool fromMap;
-  InsxEditOld({Key key, this.insxModel2, this.fromMap}) : super(key: key);
+  final InsxModel2? insxModel2;
+  final bool? fromMap;
+  InsxEditOld({Key? key, this.insxModel2, this.fromMap}) : super(key: key);
 
   @override
   _InsxEditOldState createState() => _InsxEditOldState();
 }
 
 class _InsxEditOldState extends State<InsxEditOld> {
-  InsxModel2 insxModel2;
-  File file;
-  String urlImage;
+  InsxModel2? insxModel2;
+  File? file;
+  String? urlImage;
   Location location = Location();
-  double lat, lng;
-  bool fromMap;
-  String distanceStr;
+  double? lat, lng;
+  bool? fromMap;
+  String? distanceStr;
 
-  double distanceDou;
+  double? distanceDou;
 
   @override
   void initState() {
-    // TODO: implement initState
+    super.initState();
 
     insxModel2 = widget.insxModel2;
     fromMap = widget.fromMap;
@@ -63,11 +63,11 @@ class _InsxEditOldState extends State<InsxEditOld> {
   }
 
   void myCalculateDistance() {
-    double lat2Dou = double.parse(insxModel2.lat);
-    double lng2Dou = double.parse(insxModel2.lng);
+    double lat2Dou = double.parse(insxModel2!.lat!);
+    double lng2Dou = double.parse(insxModel2!.lng!);
 
     distanceDou =
-        MyProcess().calculateDistance(lat, lng, lat2Dou, lng2Dou) * 1000;
+        MyProcess().calculateDistance(lat!, lng!, lat2Dou, lng2Dou) * 1000;
 
     NumberFormat numberFormat = NumberFormat('#0.00', 'en_US');
     distanceStr = numberFormat.format(distanceDou);
@@ -82,7 +82,7 @@ class _InsxEditOldState extends State<InsxEditOld> {
           label: 'ลุยต่อ',
           pressFunc: () {
             Navigator.pop(context);
-            editDataInsx(insxModel2);
+            editDataInsx(insxModel2!);
           },
           label2: 'กลับ',
           pressFucn2: () {
@@ -93,16 +93,19 @@ class _InsxEditOldState extends State<InsxEditOld> {
   }
 
   Future<Null> findLatLng() async {
-    Position position = await findPosition();
-    setState(() {
-      lat = position.latitude;
-      lng = position.longitude;
-    });
-    myCalculateDistance();
+    Position? position = await findPosition();
+
+    if (position != null) {
+  setState(() {
+    lat = position.latitude;
+    lng = position.longitude;
+  });
+  myCalculateDistance();
+}
   }
 
-  Future<Position> findPosition() async {
-    Position position;
+  Future<Position?> findPosition() async {
+    // Position position;
     try {
       return await Geolocator.getCurrentPosition();
     } catch (e) {
@@ -152,7 +155,7 @@ class _InsxEditOldState extends State<InsxEditOld> {
           Container(
             margin: EdgeInsets.only(top: 14),
             child: Text(
-              '${insxModel2.lat}, ${insxModel2.lng}',
+              '${insxModel2!.lat}, ${insxModel2!.lng}',
               style: TextStyle(fontSize: 12, color: Colors.red),
             ),
           ),
@@ -176,7 +179,7 @@ class _InsxEditOldState extends State<InsxEditOld> {
             child: Container(
               margin: EdgeInsets.only(top: 14),
               child: Text(
-                '${insxModel2.cus_name}',
+                '${insxModel2!.cus_name}',
                 style: TextStyle(fontSize: 12),
               ),
             ),
@@ -199,16 +202,16 @@ class _InsxEditOldState extends State<InsxEditOld> {
           Container(
             margin: EdgeInsets.all(8),
             child: Text(
-              '${insxModel2.ca}',
+              '${insxModel2!.ca}',
               style: TextStyle(fontSize: 14),
             ),
           ),
           IconButton(
             icon: Icon(Icons.copy_outlined),
             onPressed: () {
-              Clipboard.setData(ClipboardData(text: "${insxModel2.ca}"));
-              Fluttertoast.showToast(msg: 'คัดลอก ${insxModel2.ca}');
-              print(insxModel2.ca);
+              Clipboard.setData(ClipboardData(text: "${insxModel2!.ca}"));
+              Fluttertoast.showToast(msg: 'คัดลอก ${insxModel2!.ca}');
+              print(insxModel2!.ca);
             },
           ),
         ],
@@ -231,17 +234,17 @@ class _InsxEditOldState extends State<InsxEditOld> {
             child: Row(
               children: [
                 Text(
-                  '${insxModel2.pea_no}',
+                  '${insxModel2!.pea_no}',
                   style: TextStyle(fontSize: 12),
                 ),
                 IconButton(
                   icon: Icon(Icons.copy_outlined),
                   onPressed: () {
                     Clipboard.setData(
-                        ClipboardData(text: "Gis ${insxModel2.pea_no}"));
+                        ClipboardData(text: "Gis ${insxModel2!.pea_no}"));
                     Fluttertoast.showToast(
-                        msg: 'คัดลอก Gis ${insxModel2.pea_no}');
-                    print(insxModel2.pea_no);
+                        msg: 'คัดลอก Gis ${insxModel2!.pea_no}');
+                    print(insxModel2!.pea_no);
                   },
                 ),
               ],
@@ -265,7 +268,7 @@ class _InsxEditOldState extends State<InsxEditOld> {
           Container(
             margin: EdgeInsets.all(8),
             child: Text(
-              '${insxModel2.write_id}',
+              '${insxModel2!.write_id}',
               style: TextStyle(fontSize: 12),
             ),
           ),
@@ -288,7 +291,7 @@ class _InsxEditOldState extends State<InsxEditOld> {
             child: Container(
               margin: EdgeInsets.all(8),
               child: Text(
-                '${insxModel2.address}',
+                '${insxModel2!.address}',
                 style: TextStyle(fontSize: 12),
               ),
             ),
@@ -298,11 +301,11 @@ class _InsxEditOldState extends State<InsxEditOld> {
 
   Widget groupImage() => ElevatedButton.icon(
       style: ElevatedButton.styleFrom(
-        primary: Colors.red,
+        backgroundColor: Colors.red,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
       ),
       onPressed: () {
-        checkDistanceDiaiog(distanceDou);
+        checkDistanceDiaiog(distanceDou!);
         //confirmDialog();
       },
       icon: Icon(
@@ -349,7 +352,7 @@ class _InsxEditOldState extends State<InsxEditOld> {
                   MaterialButton(
                     onPressed: () {
                       Navigator.pop(context);
-                      editDataInsx(insxModel2);
+                      editDataInsx(insxModel2!);
                     },
                     child: Text(
                       'แน่ใจ',
@@ -369,13 +372,13 @@ class _InsxEditOldState extends State<InsxEditOld> {
 
   Future<Null> chooseCamera(ImageSource source) async {
     try {
-      var object = await ImagePicker().getImage(
+      var object = await ImagePicker().pickImage(
         source: source,
         maxHeight: 800,
         maxWidth: 800,
       );
       setState(() {
-        file = File(object.path);
+        file = File(object!.path);
         uploadImage();
       });
     } catch (e) {}
@@ -383,23 +386,23 @@ class _InsxEditOldState extends State<InsxEditOld> {
 
   Future<Null> uploadImage() async {
     String apiSaveFile = '${MyConstant().domain}/apipsinsx/saveFile.php';
-    String fileName = 'insx${Random().nextInt(1000000)}${insxModel2.ca}.jpg';
+    String fileName = 'insx${Random().nextInt(1000000)}${insxModel2!.ca}.jpg';
 
     try {
       Map<String, dynamic> map = Map();
-      map['file'] = await MultipartFile.fromFile(file.path, filename: fileName);
+      map['file'] = await MultipartFile.fromFile(file!.path, filename: fileName);
       FormData data = FormData.fromMap(map);
       await Dio().post(apiSaveFile, data: data).then((value) {
         urlImage = '${MyConstant().domain}/apipsinsx/upload/$fileName';
         print('=== usrlImage == $urlImage');
-        editDataInsx(insxModel2);
+        editDataInsx(insxModel2!);
       });
     } catch (e) {}
   }
 
   Future<Null> editDataInsx(InsxModel2 insxModel2) async {
     await SQLiteHelper()
-        .editValueWhereId(int.parse(insxModel2.id))
+        .editValueWhereId(int.parse(insxModel2.id!))
         .then((value) {
       print('####>>>>>> ${insxModel2.id}');
       Fluttertoast.showToast(msg: 'บันทึกแล้ว');

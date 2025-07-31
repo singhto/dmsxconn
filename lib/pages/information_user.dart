@@ -11,14 +11,14 @@ import 'package:psinsx/utility/my_style.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class InformationUser extends StatefulWidget {
-  InformationUser({Key key}) : super(key: key);
+  InformationUser({Key? key}) : super(key: key);
 
   @override
   _InformationUserState createState() => _InformationUserState();
 }
 
 class _InformationUserState extends State<InformationUser> {
-  UserModel userModel;
+  UserModel? userModel;
 
   @override
   void initState() {
@@ -28,7 +28,7 @@ class _InformationUserState extends State<InformationUser> {
 
   Future<Null> readUserInfo() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    String userId = preferences.getString('id');
+    String? userId = preferences.getString('id');
     String url =
         '${MyConstant().domain}/apipsinsx/getUserWhereId.php?isAdd=true&user_id=$userId';
     await Dio().get(url).then((value) {
@@ -38,7 +38,7 @@ class _InformationUserState extends State<InformationUser> {
         userModel = UserModel.fromJson(map);
 
         setState(() {
-          if (userModel.userAdress.isEmpty) {}
+          if (userModel!.userAdress!.isEmpty) {}
         });
       }
     });
@@ -63,7 +63,7 @@ class _InformationUserState extends State<InformationUser> {
           children: [
             userModel == null
                 ? MyStyle().showProgress()
-                : userModel.userAdress.isEmpty
+                : userModel!.userAdress!.isEmpty
                     ? showNoData()
                     : showDataUser(),
             editButton(),
@@ -124,13 +124,13 @@ class _InformationUserState extends State<InformationUser> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    'รหัสพนังาน : PS${userModel.userId}',
+                    'รหัสพนังาน : PS${userModel!.userId}',
                     style: TextStyle(fontSize: 12),
                   ),
-                  userModel.userAdress.isEmpty
+                  userModel!.userAdress!.isEmpty
                       ? Text('User')
                       : Text(
-                          'User : ${userModel.username}',
+                          'User : ${userModel!.username}',
                           style: TextStyle(fontSize: 12),
                         ),
                 ],
@@ -160,14 +160,14 @@ class _InformationUserState extends State<InformationUser> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  userModel.userAdress.isEmpty
+                  userModel!.userAdress!.isEmpty
                       ? Text('บัญชีธนาคาร')
                       : Text(
-                          '${userModel.userBankName}',
+                          '${userModel!.userBankName}',
                           style: TextStyle(fontSize: 12),
                         ),
                   Text(
-                    '${userModel.userBankNumber}',
+                    '${userModel!.userBankNumber}',
                     style: TextStyle(fontSize: 12),
                   ),
                 ],
@@ -202,7 +202,7 @@ class _InformationUserState extends State<InformationUser> {
                     style: TextStyle(fontSize: 12),
                   ),
                   Text(
-                    '${userModel.userPhone}',
+                    '${userModel!.userPhone}',
                     style: TextStyle(fontSize: 12),
                   ),
                 ],
@@ -233,7 +233,7 @@ class _InformationUserState extends State<InformationUser> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    '${userModel.userAdress}',
+                    '${userModel!.userAdress}',
                     style: TextStyle(fontSize: 12),
                   ),
                 ],
@@ -251,12 +251,12 @@ class _InformationUserState extends State<InformationUser> {
         mainAxisSize: MainAxisSize.min,
         children: [
           CircularProfileAvatar(
-            '${userModel.userImg}',
+            '${userModel!.userImg}',
             borderWidth: 4.0,
           ),
-          Text('${userModel.staffname}'),
+          Text('${userModel!.staffname}'),
           Text(
-            '${userModel.userEmail}',
+            '${userModel!.userEmail}',
             style: TextStyle(
               fontSize: 10,
             ),

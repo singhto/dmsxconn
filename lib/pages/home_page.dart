@@ -34,16 +34,16 @@ import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatefulWidget {
   //HomePage({Key key}) : super(key: key);
-  bool statusINSx; // false => Non Back frome edit INSx
-  HomePage({Key key, this.statusINSx}) : super(key: key);
+  bool? statusINSx; // false => Non Back frome edit INSx
+  HomePage({Key? key, this.statusINSx}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  String nameUser, userEmail, userImge, userId;
-  bool status;
+  String? nameUser, userEmail, userImge, userId;
+  bool? status;
 
   Widget currentWidget = MyMap();
   int selectedIndex = 0;
@@ -57,7 +57,7 @@ class _HomePageState extends State<HomePage> {
     Dashbord(),
   ];
 
-  UserModel userModel;
+  UserModel? userModel;
 
   bool online = true;
   var title = <String>[
@@ -140,19 +140,19 @@ class _HomePageState extends State<HomePage> {
     print('##26oct userId ==>>> $userId');
 
     String urlGetUserWhereId =
-        'https://www.pea23.com/apipsinsx/getUserWhereId.php?isAdd=true&user_id=$userId';
+        'https://www.dissrecs.com/apipsinsx/getUserWhereId.php?isAdd=true&user_id=$userId';
     await Dio().get(urlGetUserWhereId).then(
       (value) {
         for (var element in json.decode(value.data)) {
           userModel = UserModel.fromJson(element);
 
-          if (userModel.staffsurname.isEmpty) {
+          if (userModel!.staffsurname!.isEmpty) {
             normalDialog(context, 'กรุณาถ่ายภาพบัตรประชาชน',
                 widget: WidgetTextButton(
                   label: 'ถ่ายภาพ',
                   pressFunc: () {
                     Get.back(); //Navigator.pop
-                    Get.to(TakePhotoId()).then((value) => readUserInfo());
+                    Get.to(TakePhotoId())?.then((value) => readUserInfo());
                   },
                 ));
           }
@@ -201,7 +201,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<Null> launchURL() async {
-    final url = 'https://www.pea23.com/index.php';
+    final url = 'https://www.dissrecs.com/index.php';
     await launch(url);
     if (await canLaunch(url)) {
       await launch(url);

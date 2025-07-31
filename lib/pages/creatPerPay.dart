@@ -9,7 +9,7 @@ class CreatPerPay extends StatefulWidget {
 }
 
 class _CreatPerPayState extends State<CreatPerPay> {
-  String  prePayType, prePayAmount, prePayStatus;
+  String?  prePayType, prePayAmount, prePayStatus;
 
   @override
   Widget build(BuildContext context) {
@@ -68,9 +68,9 @@ class _CreatPerPayState extends State<CreatPerPay> {
           color: Color(0xff6a1b9a),
           onPressed: () {
             if (prePayType == null ||
-                prePayType.isEmpty ||
+                prePayType!.isEmpty ||
                 prePayAmount == null ||
-                prePayAmount.isEmpty) {
+                prePayAmount!.isEmpty) {
               normalDialog(context, 'กรุณากรอกให้ครบ');
             } else {
               print('Working');
@@ -97,9 +97,9 @@ class _CreatPerPayState extends State<CreatPerPay> {
       Future<Null> saveThread()async{
 
          SharedPreferences preferences = await SharedPreferences.getInstance();
-          String rfUserId = preferences.getString('id');
+          String? rfUserId = preferences.getString('id');
 
-        String url = 'https://www.pea23.com/apipsinsx/addDataPerPay.php?isAdd=true&ref_user_id=$rfUserId&prepay_type=$prePayType&prepay_amount=$prePayAmount&prepay_status=รออนุมัติ';
+        String url = 'https://www.dissrecs.com/apipsinsx/addDataPerPay.php?isAdd=true&ref_user_id=$rfUserId&prepay_type=$prePayType&prepay_amount=$prePayAmount&prepay_status=รออนุมัติ';
         try {
           Response response = await Dio().get(url);
           print('response = $response');

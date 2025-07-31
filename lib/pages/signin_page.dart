@@ -6,7 +6,6 @@ import 'package:psinsx/models/user_model.dart';
 import 'package:psinsx/pages/home_page.dart';
 import 'package:psinsx/utility/normal_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:progress_dialog/progress_dialog.dart';
 
 class SignIn extends StatefulWidget {
   @override
@@ -15,7 +14,7 @@ class SignIn extends StatefulWidget {
 
 class _SignInState extends State<SignIn> {
   //Field
-  String user, password;
+  String? user, password;
 
   @override
   Widget build(BuildContext context) {
@@ -63,9 +62,9 @@ class _SignInState extends State<SignIn> {
           color: Color(0xff6a1b9a),
           onPressed: () {
             if (user == null ||
-                user.isEmpty ||
+                user!.isEmpty ||
                 password == null ||
-                password.isEmpty) {
+                password!.isEmpty) {
               normalDialog(context, 'กรุณากรอก User & Password');
             } else {
               checkAuthen();
@@ -89,17 +88,17 @@ class _SignInState extends State<SignIn> {
 
   Future<Null> checkAuthen() async {
     String url =
-        'https://www.pea23.com/apipsinsx/getUserWhereUserSinghto.php?isAdd=true&username=$user';
-    ProgressDialog pr = ProgressDialog(context, isDismissible: false);
-    pr.style(
-        message: 'Loading...',
-        progressWidget: Container(
-          margin: EdgeInsets.all(10),
-          child: CircularProgressIndicator(),
-        ));
+        'https://www.dissrecs.com/apipsinsx/getUserWhereUserSinghto.php?isAdd=true&username=$user';
+    // ProgressDialog pr = ProgressDialog(context, isDismissible: false);
+    // pr.style(
+    //     message: 'Loading...',
+    //     progressWidget: Container(
+    //       margin: EdgeInsets.all(10),
+    //       child: CircularProgressIndicator(),
+    //     ));
 
     try {
-      await pr.show();
+      // await pr.show();
 
       Response response = await Dio().get(url);
       //print('res ===== $response');
@@ -107,7 +106,7 @@ class _SignInState extends State<SignIn> {
       var result = json.decode(response.data);
       print('result ===== $result');
 
-      await pr.hide();
+      // await pr.hide();
       if (result == null) {
         normalDialog(context, 'user หรือ passwor ผิดครับ');
       } else {
@@ -116,7 +115,7 @@ class _SignInState extends State<SignIn> {
           if (password == userModel.password) {
             routeTuService(HomePage(), userModel);
           } else {
-            pr.hide();
+            // pr.hide();
             normalDialog(context, 'Password ผิดครับ');
           }
         }
@@ -126,10 +125,10 @@ class _SignInState extends State<SignIn> {
 
   Future<Null> routeTuService(Widget myWidget, UserModel userModel) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    preferences.setString('id', userModel.userId);
-    preferences.setString('staffname', userModel.staffname);
-    preferences.setString('user_email', userModel.userEmail);
-    preferences.setString('user_img', userModel.userImg);
+    preferences.setString('id', userModel.userId!);
+    preferences.setString('staffname', userModel.staffname!);
+    preferences.setString('user_email', userModel.userEmail!);
+    preferences.setString('user_img', userModel.userImg!);
 
     MaterialPageRoute route = MaterialPageRoute(
       builder: (context) => myWidget,

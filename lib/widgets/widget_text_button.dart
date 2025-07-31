@@ -6,9 +6,9 @@ class WidgetTextButton extends StatelessWidget {
   final String label;
   final Function() pressFunc;
   const WidgetTextButton({
-    Key key,
-    @required this.label,
-    @required this.pressFunc,
+    Key? key,
+    required this.label,
+    required this.pressFunc,
   }) : super(key: key);
 
   @override

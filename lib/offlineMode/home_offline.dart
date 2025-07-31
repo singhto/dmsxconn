@@ -14,17 +14,17 @@ class HomeOffline extends StatefulWidget {
 
 class _HomeOfflineState extends State<HomeOffline> {
   Completer<GoogleMapController> _controllerGoogleMap = Completer();
-  GoogleMapController newGoogleMapController;
+  GoogleMapController? newGoogleMapController;
 
   GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  Position currentPosion;
+  Position? currentPosion;
   var geoLocator = Geolocator();
   double bottomPaddingOfMap = 0;
 
-  String nameUser, userEmail, userImge, userId;
+  String? nameUser, userEmail, userImge, userId;
 
-   bool statusSQLite;
+   bool? statusSQLite;
 
   @override
   void initState() {
@@ -34,8 +34,8 @@ class _HomeOfflineState extends State<HomeOffline> {
   }
 
      Future<Null> checkSQLit() async {
-    List<InsxSQLiteModel> insxSQLiteModels = await SQLiteHelper().readSQLite();
-    if (insxSQLiteModels.length == 0) {
+    List<InsxSQLiteModel>? insxSQLiteModels = await SQLiteHelper().readSQLite();
+    if (insxSQLiteModels!.length == 0) {
       // read from api
       statusSQLite = true;
       //findLatLng();
@@ -69,7 +69,7 @@ class _HomeOfflineState extends State<HomeOffline> {
 
     CameraPosition cameraPosition =
         new CameraPosition(target: latLatPosition, zoom: 14);
-    newGoogleMapController
+    newGoogleMapController!
         .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
   }
 

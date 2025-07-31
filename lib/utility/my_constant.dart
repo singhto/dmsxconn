@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 class MyConstant {
-  String domain = 'https://www.pea23.com';
+  String domain = 'https://www.dissrecs.com';
 
   static String valueInvoiceStatus = 'ดำเนินการเสร็จสมบูรณ์';
 
-  static String domainImage = 'https://www.pea23.com/apipsinsx/dmsxupload/';
-  static String apiUploadToWorkImage = 'https://www.pea23.com/apipsinsx/saveFileinsx.php';
-  static String domainUploadinsx = 'https://www.pea23.com/apipsinsx/uploadinsx/';
+  static String domainImage = 'https://www.dissrecs.com/apipsinsx/dmsxupload/';
+  static String apiUploadToWorkImage = 'https://www.dissrecs.com/apipsinsx/saveFileinsx.php';
+  static String domainUploadinsx = 'https://www.dissrecs.com/apipsinsx/uploadinsx/';
 
   static List<String> typeOils = [
     'เบนซิน91', 'เบนซิน95' , 'ดีเซล'
@@ -79,7 +79,7 @@ class MyConstant {
         fontSize: 18,
         fontWeight: FontWeight.w700,
       );
-  TextStyle h3Style({FontWeight fontWeight, Color color}) => TextStyle(
+  TextStyle h3Style({FontWeight? fontWeight, Color? color}) => TextStyle(
         fontSize: 14,
         fontWeight: fontWeight ?? FontWeight.normal,
         color: color,

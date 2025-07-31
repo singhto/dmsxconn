@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 class WidgetIconButton extends StatelessWidget {
   final IconData iconData;
   final Function() pressFunc;
-  final double size;
-  final EdgeInsetsGeometry edgeInsetsGeometry;
+  final double? size;
+  final EdgeInsetsGeometry? edgeInsetsGeometry;
 
   const WidgetIconButton({
-    Key key,
-    @required this.iconData,
-    @required this.pressFunc,
+    Key? key,
+    required this.iconData,
+    required this.pressFunc,
     this.size,
     this.edgeInsetsGeometry,
   }) : super(key: key);

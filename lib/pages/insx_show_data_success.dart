@@ -5,9 +5,9 @@ import 'package:location/location.dart';
 import 'package:psinsx/models/insx_model2.dart';
 
 class InsxShowDataSuccess extends StatefulWidget {
-  final InsxModel2 insxModel2;
-  final bool fromMap;
-  InsxShowDataSuccess({Key key, this.insxModel2, this.fromMap})
+  final InsxModel2? insxModel2;
+  final bool? fromMap;
+  InsxShowDataSuccess({Key? key, this.insxModel2, this.fromMap})
       : super(key: key);
 
   @override
@@ -15,15 +15,16 @@ class InsxShowDataSuccess extends StatefulWidget {
 }
 
 class _InsxShowDataSuccessState extends State<InsxShowDataSuccess> {
-  InsxModel2 insxModel2;
-  File file;
-  String urlImage;
+  InsxModel2? insxModel2;
+  File? file;
+  String? urlImage;
   Location location = Location();
-  double lat, lng;
-  bool fromMap;
+  double? lat, lng;
+  bool? fromMap;
 
   @override
   void initState() {
+    super.initState();
     insxModel2 = widget.insxModel2;
     fromMap = widget.fromMap;
   }
@@ -69,7 +70,7 @@ class _InsxShowDataSuccessState extends State<InsxShowDataSuccess> {
             child: Container(
               margin: EdgeInsets.only(top: 14),
               child: Text(
-                '${insxModel2.worker_name}',
+                '${insxModel2!.worker_name}',
                 style: TextStyle(
                   fontSize: 14,
                 ),
@@ -96,7 +97,7 @@ class _InsxShowDataSuccessState extends State<InsxShowDataSuccess> {
             child: Container(
               margin: EdgeInsets.only(top: 14),
               child: Text(
-                '${insxModel2.cus_name}',
+                '${insxModel2!.cus_name}',
                 style: TextStyle(fontSize: 14),
               ),
             ),
@@ -119,7 +120,7 @@ class _InsxShowDataSuccessState extends State<InsxShowDataSuccess> {
           Container(
             margin: EdgeInsets.all(8),
             child: Text(
-              '${insxModel2.ca}',
+              '${insxModel2!.ca}',
               style: TextStyle(fontSize: 14),
             ),
           ),
@@ -141,7 +142,7 @@ class _InsxShowDataSuccessState extends State<InsxShowDataSuccess> {
           Container(
             margin: EdgeInsets.all(8),
             child: Text(
-              '${insxModel2.pea_no}',
+              '${insxModel2!.pea_no}',
               style: TextStyle(fontSize: 14),
             ),
           ),
@@ -163,7 +164,7 @@ class _InsxShowDataSuccessState extends State<InsxShowDataSuccess> {
           Container(
             margin: EdgeInsets.all(8),
             child: Text(
-              '${insxModel2.write_id}',
+              '${insxModel2!.write_id}',
               style: TextStyle(fontSize: 14),
             ),
           ),
@@ -186,7 +187,7 @@ class _InsxShowDataSuccessState extends State<InsxShowDataSuccess> {
             child: Container(
               margin: EdgeInsets.all(8),
               child: Text(
-                '${insxModel2.address}',
+                '${insxModel2!.address}',
                 style: TextStyle(fontSize: 12),
               ),
             ),

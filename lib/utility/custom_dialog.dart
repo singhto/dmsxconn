@@ -16,13 +16,13 @@ class CustomDialog {
   }
 
   Future<void> actionDialog({
-    @required BuildContext context,
-    @required String title,
-    @required String subTitle,
-    @required String label,
-    @required Function() pressFunc,
-    String label2,
-    Function() pressFucn2,
+    required BuildContext context,
+    required String title,
+    required String subTitle,
+    required String label,
+    required Function() pressFunc,
+    String? label2,
+    Function()? pressFucn2,
   }) async {
     showDialog(
       context: context,

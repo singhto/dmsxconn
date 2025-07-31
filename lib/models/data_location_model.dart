@@ -1,13 +1,13 @@
 class DataLocationModel {
-  String idCheck;
-  String ca;
-  String peaNo;
-  String cusName;
-  String cusTel;
-  String ptcInsx;
-  String notiStatus;
-  String imageInsx;
-  String imgDate;
+   String? idCheck;
+   String? ca;
+   String? peaNo;
+   String? cusName;
+   String? cusTel;
+   String? ptcInsx;
+   String? notiStatus;
+   String? imageInsx;
+   String? imgDate;
 
   DataLocationModel(
       {this.idCheck,

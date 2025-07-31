@@ -6,15 +6,15 @@ import 'package:psinsx/widgets/widget_text_button.dart';
 class MyDialog {
   final BuildContext context;
   MyDialog({
-    @required this.context,
+    required this.context,
   });
 
   void normalDialot({
-    @required String title,
-    @required String subTitle,
-    Widget firstButton,
-    Widget secondButton,
-    Widget contentWidget,
+    required String title,
+    required String subTitle,
+    Widget? firstButton,
+    Widget? secondButton,
+    Widget? contentWidget,
   }) {
     showDialog(
       context: context,
