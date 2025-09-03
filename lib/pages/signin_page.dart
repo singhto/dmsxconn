@@ -172,7 +172,7 @@ class _SignInState extends State<SignIn> {
       );
 
   Text _showNameApp() => Text(
-        'dmsxConn',
+        'PEAKK',
         style: TextStyle(
           fontSize: 20,
           fontWeight: FontWeight.bold,
