@@ -146,7 +146,7 @@ class _HomePageState extends State<HomePage> {
         for (var element in json.decode(value.data)) {
           userModel = UserModel.fromJson(element);
 
-          if (userModel!.staffsurname!.isEmpty) {
+          if (userModel!.staffname!.isEmpty) {
             normalDialog(context, 'กรุณาถ่ายภาพบัตรประชาชน',
                 widget: WidgetTextButton(
                   label: 'ถ่ายภาพ',

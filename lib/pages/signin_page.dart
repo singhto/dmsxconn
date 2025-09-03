@@ -1,9 +1,9 @@
-import 'dart:convert';
-
-import 'package:dio/dio.dart';
+import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:psinsx/models/user_model.dart';
 import 'package:psinsx/pages/home_page.dart';
+import 'package:psinsx/utility/app_controller.dart';
 import 'package:psinsx/utility/normal_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -15,6 +15,8 @@ class SignIn extends StatefulWidget {
 class _SignInState extends State<SignIn> {
   //Field
   String? user, password;
+
+  AppController appController = Get.put(AppController());
 
   @override
   Widget build(BuildContext context) {
@@ -87,48 +89,71 @@ class _SignInState extends State<SignIn> {
       );
 
   Future<Null> checkAuthen() async {
-    String url =
-        'https://www.dissrecs.com/apipsinsx/getUserWhereUserSinghto.php?isAdd=true&username=$user';
-    // ProgressDialog pr = ProgressDialog(context, isDismissible: false);
-    // pr.style(
-    //     message: 'Loading...',
-    //     progressWidget: Container(
-    //       margin: EdgeInsets.all(10),
-    //       child: CircularProgressIndicator(),
-    //     ));
+    String urlAPI = 'https://www.dissrecs.com/api/auth.php';
+
+    Map<String, dynamic> map = {};
+    map['user'] = user;
+    map['passwd'] = password;
+
+    dio.FormData formData = dio.FormData.fromMap(map);
 
     try {
-      // await pr.show();
+      dio.Response response = await dio.Dio().post(urlAPI, data: formData);
 
-      Response response = await Dio().get(url);
-      //print('res ===== $response');
+      String token = response.data['token'];
 
-      var result = json.decode(response.data);
-      print('result ===== $result');
+      debugPrint('##3seb token == $token');
+
+      appController.tokens.add(token);
+
+
+      //Require info
+      dio.Dio objDio = dio.Dio();
+      objDio.options.headers['Content-Type'] = 'application/json';
+      objDio.options.headers['apikey'] = token;
+
+      String path = 'https://www.dissrecs.com/api/user_info.php';
+
+      var resultInfo = await objDio.get(path);
+
+
+      UserModel userModel = UserModel.fromMap(resultInfo.data['user_info']);
+
+      debugPrint('##3seb usermodel == ${userModel.toMap()}');
+
+      routeTuService(HomePage(), userModel);
+
+
+      // var result = json.decode(response.data);
+      // print('result ===== $result');
 
       // await pr.hide();
-      if (result == null) {
-        normalDialog(context, 'user หรือ passwor ผิดครับ');
-      } else {
-        for (var map in result) {
-          UserModel userModel = UserModel.fromJson(map);
-          if (password == userModel.password) {
-            routeTuService(HomePage(), userModel);
-          } else {
-            // pr.hide();
-            normalDialog(context, 'Password ผิดครับ');
-          }
-        }
-      }
-    } catch (e) {}
+      // if (result == null) {
+      //   normalDialog(context, 'user หรือ passwor ผิดครับ');
+      // } else {
+      //   for (var map in result) {
+      //     UserModel userModel = UserModel.fromJson(map);
+      //     if (password == userModel.password) {
+      //       routeTuService(HomePage(), userModel);
+      //     } else {
+      //       // pr.hide();
+      //       normalDialog(context, 'Password ผิดครับ');
+      //     }
+      //   }
+      // }
+    } catch (e) {
+      debugPrint('##3seb at CheckAuten $e');
+
+      normalDialog(context, 'User หรือ Password ผิดครับ');
+    }
   }
 
   Future<Null> routeTuService(Widget myWidget, UserModel userModel) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    preferences.setString('id', userModel.userId!);
-    preferences.setString('staffname', userModel.staffname!);
-    preferences.setString('user_email', userModel.userEmail!);
-    preferences.setString('user_img', userModel.userImg!);
+    preferences.setString('id', userModel.user_id);
+    preferences.setString('staffname', userModel.staffname);
+    preferences.setString('user_email', '');
+    preferences.setString('user_img', '');
 
     MaterialPageRoute route = MaterialPageRoute(
       builder: (context) => myWidget,
@@ -140,6 +165,7 @@ class _SignInState extends State<SignIn> {
         color: Color(0xffe1bee7),
         width: 250,
         child: TextFormField(
+          style: TextStyle(color: Colors.black),
           onChanged: (value) => user = value.trim(),
           decoration: InputDecoration(
             prefixIcon: Icon(
@@ -148,7 +174,6 @@ class _SignInState extends State<SignIn> {
             ),
             hintText: 'ระบุชื่อผู้ใช้ User',
             hintStyle: TextStyle(color: Color(0xff9c4dcc), fontSize: 12),
-      
           ),
         ),
       );
@@ -157,6 +182,7 @@ class _SignInState extends State<SignIn> {
         color: Color(0xffe1bee7),
         width: 250,
         child: TextFormField(
+          style: TextStyle(color: Colors.black),
           onChanged: (value) => password = value.trim(),
           obscureText: true,
           decoration: InputDecoration(
@@ -166,7 +192,6 @@ class _SignInState extends State<SignIn> {
             ),
             hintStyle: TextStyle(color: Color(0xff9c4dcc), fontSize: 12),
             hintText: 'ระบุรหัสผ่าน Password',
-          
           ),
         ),
       );
