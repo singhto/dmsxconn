@@ -121,7 +121,7 @@ class _SignInState extends State<SignIn> {
 
       debugPrint('##3seb usermodel == ${userModel.toMap()}');
 
-      routeTuService(HomePage(), userModel);
+      routeTuService(HomePage(), userModel, token: token);
 
 
       // var result = json.decode(response.data);
@@ -148,12 +148,13 @@ class _SignInState extends State<SignIn> {
     }
   }
 
-  Future<Null> routeTuService(Widget myWidget, UserModel userModel) async {
+  Future<Null> routeTuService(Widget myWidget, UserModel userModel, {required String token}) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setString('id', userModel.user_id);
     preferences.setString('staffname', userModel.staffname);
     preferences.setString('user_email', '');
     preferences.setString('user_img', '');
+    preferences.setString('token', token);
 
     MaterialPageRoute route = MaterialPageRoute(
       builder: (context) => myWidget,

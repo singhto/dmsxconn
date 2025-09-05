@@ -4,18 +4,18 @@ import 'package:intl/intl.dart';
 import 'package:psinsx/models/dmsx_model.dart';
 import 'package:psinsx/widgets/show_text.dart';
 
-class DetaliMoney extends StatefulWidget {
+class DetailMoney extends StatefulWidget {
   final List<Dmsxmodel> dmsxModels;
-  const DetaliMoney({
+  const DetailMoney({
     Key? key,
     required this.dmsxModels,
   }) : super(key: key);
 
   @override
-  State<DetaliMoney> createState() => _DetaliMoneyState();
+  State<DetailMoney> createState() => _DetailMoneyState();
 }
 
-class _DetaliMoneyState extends State<DetaliMoney> {
+class _DetailMoneyState extends State<DetailMoney> {
   var dmsxModels = <Dmsxmodel>[];
   var fourDigis = <String>[];
   Map<String, int> map = {};
@@ -42,20 +42,31 @@ class _DetaliMoneyState extends State<DetaliMoney> {
     var images = <String>[];
 
     for (var item in dmsxModels) {
-      String? string = item.images;
+      // String? string = item.images;
 
-      print('##6jul string == $string');
+      // print('##6jul string == $string');
 
-      if (string?.isNotEmpty?? false) {
-        string = string!.substring(1, string.length - 1);
-        if (string.contains(',')) {
-          var results = string.split(',');
-          for (var item in results) {
-            images.add(item.trim().substring(0, 4));
-          }
-        } else {
-          images.add(string.trim().substring(0, 4));
+      if (item.images.isNotEmpty) {
+
+        for (var element in item.images) {
+
+          images.add(element.trim().substring(0, 4));
         }
+
+
+
+
+
+        // string = string!.substring(1, string.length - 1);
+
+        // if (string.contains(',')) {
+        //   var results = string.split(',');
+        //   for (var item in results) {
+        //     images.add(item.trim().substring(0, 4));
+        //   }
+        // } else {
+        //   images.add(string.trim().substring(0, 4));
+        // }
       }
     } // for
 

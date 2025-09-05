@@ -69,7 +69,7 @@ class _DmsxListPageState extends State<DmsxListPage> {
             debouncer.run(() {
               setState(() {
                 searchDmsxModels = dmsxModels
-                    .where((element) => element.cusName!
+                    .where((element) => element.cusName
                         .toLowerCase()
                         .contains(value.toLowerCase()))
                     .toList();
@@ -107,13 +107,13 @@ class _DmsxListPageState extends State<DmsxListPage> {
                       Row(
                         children: [
                           ShowTitle(
-                            title: searchDmsxModels[index].cusName!.trim(),
-                            textStyle: MyConstant().h3Style(),
+                            title: searchDmsxModels[index].cusName.trim(),
+                            textStyle: MyConstant().h5Style(),
                           ),
                         ],
                       ),
                       ShowTitle(
-                        title: searchDmsxModels[index].line!.trim(),
+                        title: searchDmsxModels[index].line.trim(),
                         textStyle: MyConstant().h4Style(),
                       ),
                       Row(
@@ -123,7 +123,7 @@ class _DmsxListPageState extends State<DmsxListPage> {
                             style: TextStyle(fontSize: 10),
                           ),
                           ShowTitle(
-                            title: searchDmsxModels[index].statusTxt!.trim(),
+                            title: searchDmsxModels[index].statusTxt.trim(),
                             textStyle: MyConstant().h5Style(),
                           ),
                         ],
@@ -135,7 +135,7 @@ class _DmsxListPageState extends State<DmsxListPage> {
                             textStyle: MyConstant().h4Style(),
                           ),
                           ShowTitle(
-                            title: searchDmsxModels[index].peaNo!.trim(),
+                            title: searchDmsxModels[index].peaNo.trim(),
                             textStyle: MyConstant().h4Style(),
                           ),
                         ],
@@ -147,7 +147,7 @@ class _DmsxListPageState extends State<DmsxListPage> {
                             textStyle: MyConstant().h5Style(),
                           ),
                           ShowTitle(
-                            title: searchDmsxModels[index].lat!.trim(),
+                            title: searchDmsxModels[index].lat.trim(),
                             textStyle: MyConstant().h5Style(),
                           ),
                           Text(
@@ -155,32 +155,30 @@ class _DmsxListPageState extends State<DmsxListPage> {
                             style: TextStyle(fontSize: 12),
                           ),
                           ShowTitle(
-                            title: searchDmsxModels[index].lng!.trim(),
+                            title: searchDmsxModels[index].lng.trim(),
                             textStyle: MyConstant().h5Style(),
                           ),
                         ],
                       ),
                       ShowTitle(
                         title: newShowDate(
-                            header: 'วันแจ้งดำเนินการ : ',
-                            dateTimeStr: dmsxModels[index].refnoti_date ?? ''),
+                            header: 'วันแจ้งดำเนินการ:',
+                            dateTimeStr: dmsxModels[index].refnoti_date),
                         textStyle: MyConstant().h5Style(),
                       ),
                       ShowTitle(
                         title: MyCalculate().canculateDifferance(
-                          statusDate: dmsxModels[index].dataStatus ?? '',
-                          refNotification: dmsxModels[index].refnoti_date ?? '',
+                          statusDate: dmsxModels[index].dataStatus,
+                          refNotification: dmsxModels[index].refnoti_date,
                         ),
                         textStyle: MyConstant().h5Style(),
                       ),
                     ],
                   ),
                 ),
-                Expanded(
-                  child: searchDmsxModels[index].images!.isEmpty
-                      ? SizedBox()
-                      : showImage(searchDmsxModels[index].images!),
-                ),
+                searchDmsxModels[index].images.isEmpty
+                    ? SizedBox()
+                    : showImage(dmsxModel: dmsxModels[index]),
               ],
             ),
           ),
@@ -189,16 +187,16 @@ class _DmsxListPageState extends State<DmsxListPage> {
     );
   }
 
-  Widget showImage(String images) {
+  Widget showImage({required Dmsxmodel dmsxModel}) {
     List<Widget> widgets = [];
-    String string = images;
-    string = string.substring(1, string.length - 1);
-    List<String> strings = string.split(',');
+    // String string = images;
+    // string = string.substring(1, string.length - 1);
+    // List<String> strings = string.split(',');
 
-    for (var item in strings) {
+    for (var item in dmsxModel.images) {
       widgets.add(
         Container(
-          margin: EdgeInsets.symmetric(horizontal: 4),
+          margin: EdgeInsets.only(bottom: 16),
           width: 40,
           height: 40,
           child: CachedNetworkImage(
@@ -210,8 +208,10 @@ class _DmsxListPageState extends State<DmsxListPage> {
         ),
       );
     }
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: widgets,
     );
   }
@@ -231,7 +231,6 @@ class _DmsxListPageState extends State<DmsxListPage> {
 
     return result;
   }
-
 }
 
 class Debouncer {

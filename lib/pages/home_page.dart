@@ -17,7 +17,6 @@ import 'package:psinsx/pages/information_user.dart';
 import 'package:psinsx/pages/map.dart';
 import 'package:psinsx/pages/map_dmsx.dart';
 import 'package:psinsx/pages/search_dmsx.dart';
-import 'package:psinsx/pages/search_page.dart';
 import 'package:psinsx/pages/signin_page.dart';
 import 'package:psinsx/pages/take_photo_id.dart';
 import 'package:psinsx/utility/app_controller.dart';
@@ -72,8 +71,11 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+
+
     cratePages();
-    readUserInfo();
+    
+    // readUserInfo();
 
     Future.delayed(
       Duration.zero,
