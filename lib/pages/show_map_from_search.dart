@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:psinsx/models/dmsx_model.dart';
+
+import 'package:psinsx/models/search_dmsx_model.dart';
 
 class ShowMapFromSearch extends StatefulWidget {
-  final Dmsxmodel dmsxmodel;
+  final SearchDmsxModel searchDmsxModel;
+  final bool? showMobile;
 
   const ShowMapFromSearch({
     Key? key,
-    required this.dmsxmodel,
+    required this.searchDmsxModel,
+    this.showMobile,
   }) : super(key: key);
 
   @override
@@ -15,26 +18,36 @@ class ShowMapFromSearch extends StatefulWidget {
 }
 
 class _ShowMapFromSearchState extends State<ShowMapFromSearch> {
-  Dmsxmodel? dmsxmodel;
+  SearchDmsxModel? searchDmsxmodel;
+
+  LatLng? latLng;
 
   @override
   void initState() {
     super.initState();
-    dmsxmodel = widget.dmsxmodel;
+    searchDmsxmodel = widget.searchDmsxModel;
+    
+    if (widget.showMobile ?? false) {
+      //แสดงแผนที่ latMobile, lngMobile
+      latLng = LatLng(double.parse(searchDmsxmodel!.latMobile), double.parse(searchDmsxmodel!.lngMobile));
+    } else {
+      //แสดงแผนที่ lat, lng
+      latLng = LatLng(double.parse(searchDmsxmodel!.lat), double.parse(searchDmsxmodel!.lng));
+    }
+
+    
+
+
+
   }
 
   Set<Marker> myMarker() {
     return <Marker>[
       Marker(
         markerId: MarkerId('id'),
-        position: LatLng(
-          double.parse(dmsxmodel!.lat!.trim()),
-          double.parse(
-            dmsxmodel!.lng!.trim(),
-          ),
-        ),
+        position: latLng!,
         infoWindow:
-            InfoWindow(title: dmsxmodel!.cusName, snippet: dmsxmodel!.address),
+            InfoWindow(title: searchDmsxmodel!.cus_name, snippet: searchDmsxmodel!.status_txt),
       ),
     ].toSet();
   }
@@ -43,7 +56,7 @@ class _ShowMapFromSearchState extends State<ShowMapFromSearch> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(dmsxmodel!.ca!),
+        title: Text(searchDmsxmodel!.cus_name),
       ),
       body: LayoutBuilder(
         builder: (context, constraints) => Container(
@@ -51,12 +64,7 @@ class _ShowMapFromSearchState extends State<ShowMapFromSearch> {
           height: constraints.maxHeight,
           child: GoogleMap(
             initialCameraPosition: CameraPosition(
-                target: LatLng(
-                  double.parse(dmsxmodel!.lat!.trim()),
-                  double.parse(
-                    dmsxmodel!.lng!.trim(),
-                  ),
-                ),
+                target: latLng!,
                 zoom: 16),
             markers: myMarker(),
             myLocationEnabled: true,

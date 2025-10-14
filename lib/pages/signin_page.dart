@@ -119,28 +119,11 @@ class _SignInState extends State<SignIn> {
 
       UserModel userModel = UserModel.fromMap(resultInfo.data['user_info']);
 
-      debugPrint('##3seb usermodel == ${userModel.toMap()}');
+      debugPrint('##14Oct usermodel == ${userModel.toMap()}');
 
       routeTuService(HomePage(), userModel, token: token);
 
 
-      // var result = json.decode(response.data);
-      // print('result ===== $result');
-
-      // await pr.hide();
-      // if (result == null) {
-      //   normalDialog(context, 'user หรือ passwor ผิดครับ');
-      // } else {
-      //   for (var map in result) {
-      //     UserModel userModel = UserModel.fromJson(map);
-      //     if (password == userModel.password) {
-      //       routeTuService(HomePage(), userModel);
-      //     } else {
-      //       // pr.hide();
-      //       normalDialog(context, 'Password ผิดครับ');
-      //     }
-      //   }
-      // }
     } catch (e) {
       debugPrint('##3seb at CheckAuten $e');
 
@@ -154,6 +137,9 @@ class _SignInState extends State<SignIn> {
     preferences.setString('staffname', userModel.staffname);
     preferences.setString('user_email', '');
     preferences.setString('user_img', '');
+    preferences.setString('username', userModel.username);
+    preferences.setString('user_branch', userModel.user_branch);
+    preferences.setString('user_type', userModel.user_type);
     preferences.setString('token', token);
 
     MaterialPageRoute route = MaterialPageRoute(

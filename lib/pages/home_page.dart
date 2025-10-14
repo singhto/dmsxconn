@@ -1,8 +1,6 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
-import 'package:dio/dio.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -11,21 +9,19 @@ import 'package:psinsx/models/insx_model2.dart';
 import 'package:psinsx/models/user_model.dart';
 import 'package:psinsx/pages/add_information_user.dart';
 import 'package:psinsx/pages/dashbord.dart';
+import 'package:psinsx/pages/dmsx_load_list.dart';
 
 import 'package:psinsx/pages/help_page.dart';
-import 'package:psinsx/pages/information_user.dart';
 import 'package:psinsx/pages/map.dart';
 import 'package:psinsx/pages/map_dmsx.dart';
 import 'package:psinsx/pages/search_dmsx.dart';
 import 'package:psinsx/pages/signin_page.dart';
-import 'package:psinsx/pages/take_photo_id.dart';
 import 'package:psinsx/utility/app_controller.dart';
 import 'package:psinsx/utility/app_service.dart';
 import 'package:psinsx/utility/my_constant.dart';
 import 'package:psinsx/utility/normal_dialog.dart';
 import 'package:psinsx/utility/sqlite_helper.dart';
 import 'package:psinsx/widgets/show_text.dart';
-import 'package:psinsx/widgets/widget_text_button.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:upgrader/upgrader.dart';
@@ -41,7 +37,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  String? nameUser, userEmail, userImge, userId;
+  String? nameUser, positionUser, userImge, userId;
   bool? status;
 
   Widget currentWidget = MyMap();
@@ -68,14 +64,19 @@ class _HomePageState extends State<HomePage> {
 
   AppController appController = Get.put(AppController());
 
+  Map<String, String> map = {};
+
   @override
   void initState() {
     super.initState();
 
+    map['1'] = 'พนักงานช่าง';
+    map['2'] = 'หัวหน้าช่าง';
+    map['99'] = 'แอดมิน';
 
     cratePages();
-    
-    // readUserInfo();
+
+    readUserInfo();
 
     Future.delayed(
       Duration.zero,
@@ -135,34 +136,36 @@ class _HomePageState extends State<HomePage> {
     SharedPreferences preferences = await SharedPreferences.getInstance();
 
     nameUser = preferences.getString('staffname');
-    userEmail = preferences.getString('user_email');
-    userImge = preferences.getString('user_img');
-    userId = preferences.getString('id');
-
-    print('##26oct userId ==>>> $userId');
-
-    String urlGetUserWhereId =
-        'https://www.dissrecs.com/apipsinsx/getUserWhereId.php?isAdd=true&user_id=$userId';
-    await Dio().get(urlGetUserWhereId).then(
-      (value) {
-        for (var element in json.decode(value.data)) {
-          userModel = UserModel.fromJson(element);
-
-          if (userModel!.staffname!.isEmpty) {
-            normalDialog(context, 'กรุณาถ่ายภาพบัตรประชาชน',
-                widget: WidgetTextButton(
-                  label: 'ถ่ายภาพ',
-                  pressFunc: () {
-                    Get.back(); //Navigator.pop
-                    Get.to(TakePhotoId())?.then((value) => readUserInfo());
-                  },
-                ));
-          }
-        }
-      },
-    );
+    positionUser = preferences.getString('user_type');
+    userImge = '';
+    userId = '';
 
     setState(() {});
+
+    // print('##26oct userId ==>>> $userId');
+
+    // String urlGetUserWhereId =
+    //     'https://www.dissrecs.com/apipsinsx/getUserWhereId.php?isAdd=true&user_id=$userId';
+    // await Dio().get(urlGetUserWhereId).then(
+    //   (value) {
+    //     for (var element in json.decode(value.data)) {
+    //       userModel = UserModel.fromJson(element);
+
+    //       if (userModel!.staffname.isEmpty) {
+    //         normalDialog(context, 'กรุณาถ่ายภาพบัตรประชาชน',
+    //             widget: WidgetTextButton(
+    //               label: 'ถ่ายภาพ',
+    //               pressFunc: () {
+    //                 Get.back(); //Navigator.pop
+    //                 Get.to(TakePhotoId())?.then((value) => readUserInfo());
+    //               },
+    //             ));
+    //       }
+    //     }
+    //   },
+    // );
+
+    // setState(() {});
   }
 
   Widget showDrawerHeader() {
@@ -182,8 +185,8 @@ class _HomePageState extends State<HomePage> {
           borderWidth: 4.0,
         ),
       ),
-      accountName: Text('$nameUser'),
-      accountEmail: Text('$userEmail'),
+      accountName: Text(nameUser ?? 'NoName'),
+      accountEmail: Text(map[positionUser] ?? ''),
     );
   }
 
@@ -226,19 +229,38 @@ class _HomePageState extends State<HomePage> {
             padding: EdgeInsets.zero,
             children: [
               showDrawerHeader(),
+              // ListTile(
+              //     leading: Icon(Icons.person_pin),
+              //     title: Text('ข้อมูลส่วนตัว'),
+              //     subtitle: Text(
+              //       'ข้อมูลส่วนตัวของพนักงาน',
+              //       style: TextStyle(fontSize: 10),
+              //     ),
+              //     trailing: Icon(Icons.arrow_right),
+              //     onTap: () {
+              //       Navigator.pop(context);
+              //       Navigator.of(context).push(MaterialPageRoute(
+              //           builder: (context) => InformationUser()));
+              //     }),
               ListTile(
                   leading: Icon(Icons.person_pin),
-                  title: Text('ข้อมูลส่วนตัว'),
+                  title: Text('ดึงข้อมูล Dm'),
                   subtitle: Text(
-                    'ข้อมูลส่วนตัวของพนักงาน',
+                    'โหลดข้อมูล อัพเดท Dm',
                     style: TextStyle(fontSize: 10),
                   ),
                   trailing: Icon(Icons.arrow_right),
                   onTap: () {
+
                     Navigator.pop(context);
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => InformationUser()));
+                             Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => DmsxLoadList()));
+
+
                   }),
+
+
+
               ListTile(
                   leading: Icon(Icons.help),
                   title: Text('ช่วยเหลือ'),
@@ -252,18 +274,21 @@ class _HomePageState extends State<HomePage> {
                     Navigator.of(context).push(
                         MaterialPageRoute(builder: (context) => HelpPage()));
                   }),
+
               ListTile(
                   leading: Icon(Icons.download_rounded),
-                  title: Text('ดึงข้อมูล'),
+                  title: Text('โหลดข้อมูล'),
                   subtitle: Text(
-                    'เปิดเว็ปไซต์บริษัท,แหล่งข้อมูล',
+                    'แหล่งข้อมูล',
                     style: TextStyle(fontSize: 10),
                   ),
                   trailing: Icon(Icons.arrow_right),
                   onTap: () {
                     Navigator.pop(context);
+
                     launchURL();
                   }),
+
               ListTile(
                 leading: Icon(Icons.logout),
                 title: Text('ออกจากระบบ'),
@@ -281,7 +306,7 @@ class _HomePageState extends State<HomePage> {
               ListTile(
                 title: Text('Version อัพเดทล่าสุด'),
                 subtitle: Text(
-                  'อัพเดทเมื่อ 31 กรกฎาคม 2568',
+                  'อัพเดทเมื่อ 5 กันยายน 2568',
                   style: TextStyle(fontSize: 10),
                 ),
               ),
@@ -322,15 +347,20 @@ class _HomePageState extends State<HomePage> {
               onTap: () {
                 moveToEditProfile();
               },
-              child: CircularProfileAvatar(
-                '$userImge',
-                borderWidth: 2,
-                radius: 28,
-                elevation: 5.0,
-                cacheImage: true,
-                foregroundColor: Colors.brown.withOpacity(0.5),
-                imageFit: BoxFit.cover,
-              ),
+              child: Icon(Icons.person_2_outlined),
+              // child: CircularProfileAvatar(
+              //   'assets/images/meter.jpg',
+              //   // '$userImge',
+              //   borderWidth: 2,
+              //   radius: 28,
+              //   elevation: 5.0,
+              //   cacheImage: true,
+              //   foregroundColor: Colors.brown.withOpacity(0.5),
+              //   imageFit: BoxFit.cover,
+              // ),
+            ),
+            SizedBox(
+              width: 16,
             )
           ],
         ),
